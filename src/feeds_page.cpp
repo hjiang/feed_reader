@@ -91,14 +91,6 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
 FeedsPage::~FeedsPage() {
 }
 
-// void FeedsPage::keyPressEvent(QKeyEvent* event) {
-//     qDebug() << "Key code: " << event->key();
-//     const int key = event->key();
-//     if (key == Qt::Key_Right) {
-//         emit pageRight();
-//     }
-// }
-
 void FeedsPage::showEvent(QShowEvent* event) {
     int total_width = 590;
     feed_list_view_->setColumnWidth(0, static_cast<int>(0.9 * total_width));

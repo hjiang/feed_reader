@@ -37,7 +37,6 @@ class FeedsPage : public QWidget {
 
   protected:
     virtual void showEvent (QShowEvent* event);
-    // virtual void keyPressEvent(QKeyEvent* event);
 
   private slots:
     void showAddFeedDialog();
