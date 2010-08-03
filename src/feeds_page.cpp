@@ -74,9 +74,12 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
 
     connect(feed_list_view_, SIGNAL(activated(const QModelIndex&)),
             this, SLOT(handleActivated(const QModelIndex&)));
-    connect(feed_list_view_, SIGNAL(clicked(const QModelIndex&)),
+//    connect(feed_list_view_, SIGNAL(clicked(const QModelIndex&)),
+//            this, SLOT(handleActivated(const QModelIndex&)));
+    connect(feed_list_view_, SIGNAL(doubleClicked( const QModelIndex &)),
             this, SLOT(handleActivated(const QModelIndex&)));
-
+    connect(delete_feed_button, SIGNAL(clicked()),
+            this, SLOT(delFeed()));
     WidgetUpdater& updater(Singleton<WidgetUpdater>::instance());
     updater.addWidget(add_feed_button, ScreenProxy::GU);
     updater.addWidget(delete_feed_button, ScreenProxy::GU);
@@ -117,5 +120,16 @@ void FeedsPage::addFeed() {
     feed_list_model_->addFeed(add_feed_dialog_->url());
 }
 
+void FeedsPage::delFeed() {
+    int index = feed_list_view_->currentIndex().data(
+    FeedListModel::FeedIdentifierRole).toInt();
+    if (index < 0) {
+          return;
+    }
+    shared_ptr<Feed> feed = feed_list_model_->getFeed(index);
+    feed_list_model_->delFeed(feed);
+    //TODO: refresh article list view; should emit a signal
+    //emit deleted();
+    }
 }  // namespace feed_reader
 }  // namespace onyx

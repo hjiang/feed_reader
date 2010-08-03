@@ -118,5 +118,9 @@ void FeedListModel::refreshAllFeeds() {
     }
 }
 
+void FeedListModel::delFeed(shared_ptr<Feed> feed) {
+      feed->removeOld();
+      loadFromDatabase();
+}
 }  // namespace feed_reader
 }  // namespace onyx

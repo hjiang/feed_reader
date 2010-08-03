@@ -42,7 +42,8 @@ class FeedsPage : public QWidget {
     void showAddFeedDialog();
     void addFeed();
     void handleActivated(const QModelIndex& index);
-
+    void delFeed();
+    
   private:
     friend class AcceptanceTest;
 

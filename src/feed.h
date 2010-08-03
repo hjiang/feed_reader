@@ -72,7 +72,9 @@ class Feed {
     // occured. The contents of feeds will be cleared if the operation succeeds.
     // But if an error occured, the feeds argument is not modified.
     static bool all(vector<shared_ptr<Feed> >* feeds);
-
+    ///@brief remove feed;
+    bool removeOld();
+     
   private:
     void initializeFromQuery(QSqlQuery* query);
     QString title_;

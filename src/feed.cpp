@@ -207,5 +207,34 @@ int Feed::count() {
     }
 }
 
+bool Feed::removeOld() {
+    createTable();
+    shared_ptr<Database> db(Database::getShared());
+    QSqlQuery query;
+    qDebug()<<"feed :preparing, feed_id is " +id_;
+    //delete articles
+    if (!query.prepare("DELETE FROM articles WHERE feed_id=:feed_id")) {
+        ReportDatabaseError(query, "Error preparing to delete feeds");
+        return false;
+    }
+    query.addBindValue(id_);
+
+    if (!query.exec()) {
+        ReportDatabaseError(query, "Error deleting articles");
+        return false;
+    }
+
+    if (!query.prepare("DELETE FROM feeds WHERE id=:id")) {
+        ReportDatabaseError(query, "Error preparing to delete feeds");
+        return false;
+    }
+    query.addBindValue(id_);
+    qDebug() << "deleting an old feed.";
+    if (!query.exec()) {
+        ReportDatabaseError(query, "Error deleting  feeds");
+        return false;
+    }
+    return true;
+}
 }  // namespace feed_reader
 }  // namespace onyx
