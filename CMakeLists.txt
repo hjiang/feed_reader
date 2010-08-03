@@ -15,7 +15,7 @@ include(tc)
 include(onyx_test)
 
 find_package(Qt4 4.5.2 COMPONENTS QtCore QtGui QtXml QtSql QtWebKit QtNetwork
-  QtTest REQUIRED)
+  QtTest QtDBus REQUIRED)
 include(${QT_USE_FILE})
 
 include_directories(BEFORE
@@ -61,8 +61,7 @@ endmacro(STRICT_WARNING)
 
 add_definitions(-DSHARE_ROOT="/usr/share")
 
-set(QT_LIBS QtCore QtGui QtSql QtDBus QtWebKit QtNetwork)
-set(ONYX_LIBS onyx_sys onyx_ui onyx_wifi onyx_wpa onyx_screen)
+set(ONYX_LIBS onyx_sys onyx_ui onyx_wifi onyx_wpa onyx_screen onyx_data onyx_cms)
 ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE)
 IF (WIN32)
 ADD_DEFINITIONS(-DCONFIG_NATIVE_WINDOWS)
