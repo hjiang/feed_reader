@@ -118,7 +118,7 @@ void FeedListModel::refreshAllFeeds() {
     }
 }
 
-void FeedListModel::delFeed(shared_ptr<Feed> feed) {
+void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
       feed->removeOld();
       loadFromDatabase();
 }

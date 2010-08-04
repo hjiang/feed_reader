@@ -39,7 +39,7 @@ class FeedListModel : public QAbstractTableModel {
     void addFeed(const QUrl& url);
     void refreshAllFeeds();
     void updateFeed(shared_ptr<Feed> feed);
-    void delFeed(shared_ptr<Feed> feed);
+    void deleteFeed(shared_ptr<Feed> feed);
 
   private:
     vector<shared_ptr<Feed> > feeds_;

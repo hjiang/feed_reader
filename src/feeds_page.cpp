@@ -120,14 +120,14 @@ void FeedsPage::addFeed() {
     feed_list_model_->addFeed(add_feed_dialog_->url());
 }
 
-void FeedsPage::delFeed() {
+void FeedsPage::deleteFeed() {
     int index = feed_list_view_->currentIndex().data(
     FeedListModel::FeedIdentifierRole).toInt();
     if (index < 0) {
           return;
     }
     shared_ptr<Feed> feed = feed_list_model_->getFeed(index);
-    feed_list_model_->delFeed(feed);
+    feed_list_model_->deleteFeed(feed);
     //TODO: refresh article list view; should emit a signal
     //emit deleted();
     }
