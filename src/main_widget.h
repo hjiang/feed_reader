@@ -22,21 +22,20 @@ class FeedsPage;
 
 // The main widget of the application. It has a TabWidget with two
 // tabs: the feed list tab and the article tab.
-class MainWidget : public QWidget
-{
+class MainWidget : public QWidget {
     Q_OBJECT;
-  public:
+public:
     MainWidget(QWidget* parent = 0);
     virtual ~MainWidget();
 
     void fitToScreen();
 
-  private slots:
+private slots:
     void displayItemListForUrl(int id);
     void displayArticle(shared_ptr<Article> article);
     void updateTab(int index);
 
-  private:
+private:
     friend class AcceptanceTest;
 
     // TODO(hjiang): refactor using the pImpl idiom.

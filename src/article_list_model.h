@@ -17,7 +17,7 @@ class Feed;
 class ArticleListModel : public QAbstractListModel {
     Q_OBJECT;
 
-  public:
+public:
     enum ArticleDataRole {
         ArticleIdentifierRole = Qt::UserRole,
         ArticleDisplayRole
@@ -30,7 +30,7 @@ class ArticleListModel : public QAbstractListModel {
     virtual QVariant data(const QModelIndex &index, int role) const;
     void switchToFeed(shared_ptr<Feed> feed);
 
-  private:
+private:
     vector<shared_ptr<Article> > articles_;
 };
 

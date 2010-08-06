@@ -21,7 +21,7 @@ extern QEvent::Type DELAYED_UPDATE_EVENT_TYPE;
 class WidgetUpdater : QObject {
     Q_OBJECT;
     typedef onyx::screen::ScreenProxy::Waveform Waveform;
-  public:
+public:
     WidgetUpdater();
 
     /// Install the WidgetUpdater as an EventFilter for the
@@ -30,10 +30,10 @@ class WidgetUpdater : QObject {
     void addWidget(QWidget* widget, Waveform waveform);
 
     void postDelayedUpdate(QWidget* widget);
-  protected:
+protected:
     bool eventFilter(QObject* obj, QEvent* event);
 
-  private:
+private:
     map<QWidget*, Waveform> waveform_map_;
     set<QEvent::Type> masked_events_;
     Waveform default_waveform_;

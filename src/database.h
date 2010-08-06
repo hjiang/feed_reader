@@ -12,7 +12,7 @@ namespace onyx {
 namespace feed_reader {
 
 class Database {
-  public:
+public:
     // Set path to the database file.
     static void init(const QString& path);
     // Open a shared connection, close it when the last instance goes
@@ -20,7 +20,7 @@ class Database {
     static shared_ptr<Database> getShared();
 
     ~Database();
-  private:
+private:
     static QString path_;
 
     Database();

@@ -33,7 +33,6 @@ void FeedFetcher::init() {
     impl_->http_.reset(new QHttp);
     connect(impl_->http_.get(), SIGNAL(readyRead(const QHttpResponseHeader &)),
             this, SLOT(readData(const QHttpResponseHeader &)));
-
     connect(impl_->http_.get(), SIGNAL(requestFinished(int, bool)),
             this, SLOT(finishFetch(int, bool)));
 }
@@ -63,7 +62,7 @@ void FeedFetcher::startFetch() {
     init();
     CHECK(impl_->http_.get());
     qDebug() << "Fetching '" << url.path() << "' from host " << url.host()
-             << " and port " << port;
+    << " and port " << port;
     impl_->http_->setHost(url.host(), port);
     impl_->connection_id_ = impl_->http_->get(url.path());
 }
@@ -78,46 +77,57 @@ void FeedFetcher::scheduleFetch(shared_ptr<Feed> feed) {
 
 void FeedFetcher::readData(const QHttpResponseHeader& response_header) {
     DCHECK(impl_->current_feed_.get());
+
     if (response_header.statusCode() == 200) {
         QByteArray bytes(impl_->http_->readAll());
         qDebug() << bytes.size() << " bytes received.";
+
         if (!impl_->parser_->append(bytes)) {
             qDebug() << "Error parsing feed: "
-                     << impl_->parser_->errorString();
+            << impl_->parser_->errorString();
         }
-    } else {
+    }
+    else {
         qDebug() << "Received non-200 response code: "
-                 << response_header.statusCode();
+        << response_header.statusCode();
     }
 }
 
 void FeedFetcher::finishFetch(int connection_id, bool error) {
     qDebug() << "Connection finished: " << connection_id;
+
     if (connection_id == impl_->connection_id_) {
         // Stop and clear all pending fetch ops if this is true
         // (network connection problem).
         bool has_error = false;
+
         if (error) {
             qDebug() << "Received error during HTTP fetch: "
-                     << impl_->http_->errorString();
+            << impl_->http_->errorString();
             QHttp::Error e = impl_->http_->error();
+
             if (e == QHttp::HostNotFound || e == QHttp::UnknownError) {
                 has_error = true;
             }
-        } else {
+        }
+        else {
             if (impl_->parser_->hasError()) {
                 qDebug() << "Error parsing feed: "
-                         << impl_->parser_->errorString();
-            } else if (impl_->parser_->finished()) {
+                << impl_->parser_->errorString();
+            }
+            else if (impl_->parser_->finished()) {
                 impl_->parser_->finalize();
                 emit feedUpdated(impl_->parser_->feed());
-            } else {
+            }
+            else {
                 qDebug() << "Feed ended prematurely!";
             }
         }
+
         impl_->pending_feeds_.pop();
         impl_->current_feed_.reset();
         startFetch();
+
         if (has_error) {
             emit networkError();
         }

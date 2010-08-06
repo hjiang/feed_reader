@@ -28,12 +28,12 @@ Database::Database()
     if (!db_.isOpen()) {
         qDebug() << "Cannot open: " << Database::path_;
         QMessageBox::critical(
-                0,
-                QApplication::tr("Cannot open database"),
-                QApplication::tr(
-                        "Unable to create or open the feeds database.\n"
-                        "Click Cancel to exit."),
-                QMessageBox::Cancel);
+            0,
+            QApplication::tr("Cannot open database"),
+            QApplication::tr(
+                "Unable to create or open the feeds database.\n"
+                "Click Cancel to exit."),
+            QMessageBox::Cancel);
     }
 }
 

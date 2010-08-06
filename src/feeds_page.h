@@ -29,7 +29,7 @@ class FeedsPage : public QWidget {
     Q_OBJECT;
 public:
     explicit FeedsPage(FeedListModel* feed_list_model,
-                       QWidget* parent = NULL);
+            QWidget* parent = NULL);
     virtual ~FeedsPage();
 
 signals:
@@ -37,7 +37,7 @@ signals:
     void pageRight();
 
 protected:
-    virtual void showEvent (QShowEvent* event);
+    virtual void showEvent(QShowEvent* event);
 
 private slots:
     void showAddFeedDialog();
@@ -64,4 +64,4 @@ private:
 }  // namespace onyx
 
 #endif  // ONYX_FEED_READER_FEEDS_PAGE_H__
-// kate: indent-mode cstyle; space-indent on; indent-width 0; 
+// kate: indent-mode cstyle; space-indent on; indent-width 0;

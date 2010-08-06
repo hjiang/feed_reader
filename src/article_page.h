@@ -16,13 +16,13 @@ namespace feed_reader {
 
 class ArticlePage : public QWidget {
     Q_OBJECT;
-  public:
+public:
     explicit ArticlePage(QWidget* parent = NULL);
     virtual ~ArticlePage();
 
     void displayArticle(shared_ptr<Article> article);
 
-  private:
+private:
     QWebView* web_view_;
 
     NO_COPY_AND_ASSIGN(ArticlePage);

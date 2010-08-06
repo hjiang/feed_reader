@@ -21,18 +21,18 @@ class Article;
 
 class ArticleListPage : public QWidget {
     Q_OBJECT;
-  public:
+public:
     ArticleListPage(QAbstractItemModel* article_list_model,
-                    QWidget* parent = NULL);
+            QWidget* parent = NULL);
     virtual ~ArticleListPage();
 
-  signals:
+signals:
     void articleActivated(shared_ptr<Article> article);
 
-  private slots:
+private slots:
     void handleActivated(const QModelIndex& index);
 
-  private:
+private:
     QListView* article_list_view_;
 
     NO_COPY_AND_ASSIGN(ArticleListPage);

@@ -18,11 +18,10 @@
 #error "Building for ARM but QT_ARCH_ARM is not set!"
 #endif
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     using namespace onyx::feed_reader;
     DELAYED_UPDATE_EVENT_TYPE = static_cast<QEvent::Type>(
-                                    QEvent::registerEventType(QEvent::User + 1));
+                QEvent::registerEventType(QEvent::User + 1));
     QApplication app(argc, argv);
     QApplication::setFont(QFont("Sans Serif", 12));
     InitArgs args;
@@ -30,4 +29,4 @@ int main(int argc, char *argv[])
     scoped_ptr<MainWidget> mw(init(args));
     return app.exec();
 }
-// kate: indent-mode cstyle; space-indent on; indent-width 0; 
+// kate: indent-mode cstyle; space-indent on; indent-width 0;

@@ -33,7 +33,7 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     feed_list_view_->setModel(feed_list_model);
     feed_list_view_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     //
-    selectionModel_=new QItemSelectionModel(feed_list_model);
+    selectionModel_ = new QItemSelectionModel(feed_list_model);
     feed_list_view_->setSelectionModel(selectionModel_);
     // The feeds page has a list of subscribed feeds and three
     // buttons.
@@ -41,7 +41,6 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     QPushButton* refresh_button(new QPushButton(this));
     QPushButton* delete_feed_button(new QPushButton(this));
     QPushButton* quit_button(new QPushButton(this));
-
     // Set labels and size policies.
     add_feed_button->setText(tr("Add feed"));
     refresh_button->setText(tr("Refresh"));
@@ -49,21 +48,18 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     quit_button->setText(tr("Quit"));
     QSizePolicy size_policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     feed_list_view_->setSizePolicy(size_policy);
-
     // Set up layout and sub-layout
     QLayout* button_layout = new QHBoxLayout;
     button_layout->addWidget(add_feed_button);
     button_layout->addWidget(refresh_button);
     button_layout->addWidget(delete_feed_button);
     button_layout->addWidget(quit_button);
-
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setSpacing(0);
     layout->setContentsMargins(1, 0, 1, 0);
     layout->addWidget(feed_list_view_);
     layout->addLayout(button_layout);
     setLayout(layout);
-
     // Set up connections.
     connect(add_feed_button, SIGNAL(clicked()),
             this, SLOT(showAddFeedDialog()));
@@ -74,24 +70,20 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     connect(quit_button, SIGNAL(clicked()),
             qApp, SLOT(quit()));
     feed_list_view_->setSelectionBehavior(QAbstractItemView::SelectItems);
-    connect(feed_list_view_, SIGNAL( activated(QModelIndex)),
+    connect(feed_list_view_, SIGNAL(activated(QModelIndex)),
             this, SLOT(handleActivated(const QModelIndex&)));
-
-    connect(feed_list_view_, SIGNAL(clicked( const QModelIndex &)),
+    connect(feed_list_view_, SIGNAL(clicked(const QModelIndex &)),
             this, SLOT(handleActivated(const QModelIndex&)));
-
 //     connect(feed_list_view_, SIGNAL(doubleClicked( const QModelIndex &)),
 //             this, SLOT(handleActivated(const QModelIndex&)));
     connect(delete_feed_button, SIGNAL(clicked()),
             this, SLOT(deleteFeeds()));
-
     WidgetUpdater& updater(Singleton<WidgetUpdater>::instance());
     updater.addWidget(add_feed_button, ScreenProxy::GU);
     updater.addWidget(delete_feed_button, ScreenProxy::GU);
     updater.addWidget(refresh_button, ScreenProxy::GU);
     updater.addWidget(quit_button, ScreenProxy::GU);
     updater.addWidget(feed_list_view_, ScreenProxy::GU);
-
     // Retain pointers for testing
     add_feed_button_ = add_feed_button;
 }
@@ -103,19 +95,20 @@ void FeedsPage::showEvent(QShowEvent* event) {
     // int total_width = 580;
     feed_list_view_->setColumnWidth(0, feed_list_view_->rowHeight(0));
     feed_list_view_->setColumnWidth(1, feed_list_view_->rowHeight(0) * 2);
-    feed_list_view_->setColumnWidth(2, parentWidget()->width() - feed_list_view_->rowHeight(0) *3-30);
+    feed_list_view_->setColumnWidth(2, parentWidget()->width() - feed_list_view_->rowHeight(0) *3 - 30);
     QWidget::showEvent(event);
 }
 
 void FeedsPage::handleActivated(const QModelIndex& index) {
 //   if (index.model()->)
-    if (selectionModel_->isColumnSelected(1,index)) {
-        qDebug()<<__LINE__;
-        qDebug()<<__FILE__;
+    if (selectionModel_->isColumnSelected(1, index)) {
+        qDebug() << __LINE__;
+        qDebug() << __FILE__;
         emit feedActivated(
             feed_list_view_->model()->data(
                 index, FeedListModel::FeedIdentifierRole).toInt());
     }
+
     return;
 }
 
@@ -133,10 +126,12 @@ void FeedsPage::addFeed() {
 
 void FeedsPage::deleteFeed() {
     int index = feed_list_view_->currentIndex().data(
-                    FeedListModel::FeedIdentifierRole).toInt();
+                FeedListModel::FeedIdentifierRole).toInt();
+
     if (index < 0) {
         return;
     }
+
     shared_ptr<Feed> feed = feed_list_model_->getFeed(index);
     feed_list_model_->deleteFeed(feed);
     //TODO: refresh article list view; should emit a signal
@@ -151,4 +146,4 @@ void FeedsPage::deleteFeeds() {
 
 }  // namespace feed_reader
 }  // namespace onyx
-// kate: indent-mode cstyle; space-indent on; indent-width 0; 
+// kate: indent-mode cstyle; space-indent on; indent-width 0;

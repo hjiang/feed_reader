@@ -10,10 +10,10 @@ namespace feed_reader {
 
 template <typename T>
 class Singleton {
-  public:
+public:
     static T& instance();
 
-  private:
+private:
     NO_COPY_AND_ASSIGN(Singleton);
 };
 

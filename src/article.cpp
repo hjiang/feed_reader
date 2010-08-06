@@ -24,54 +24,61 @@ bool Article::createTableIfNeeded() {
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
     return query.exec("CREATE TABLE IF NOT EXISTS articles"
-                      "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                      " title, url UNIQUE NOT NULL, text,"
-                      " feed_id NOT NULL, is_read);");
+            "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            " title, url UNIQUE NOT NULL, text,"
+            " feed_id NOT NULL, is_read);");
 }
 
 // static
 bool Article::loadByFeed(shared_ptr<Feed> feed,
-                         vector<shared_ptr<Article> >* articles) {
+        vector<shared_ptr<Article> >* articles) {
     qDebug() << "Loading articles for feed: " << feed->feed_url();
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query("SELECT * FROM articles WHERE feed_id = :feed_id "
-                    "ORDER BY id DESC");
+            "ORDER BY id DESC");
     query.addBindValue(feed->id());
+
     if (!query.exec()) {
         ReportDatabaseError(query);
         return false;
     }
+
     qDebug() << query.size() << " articles loaded from database.";
     articles->clear();
+
     while (query.next()) {
         // FIXME: Ony need feed_id
         shared_ptr<Article> article(new Article(feed));
         article->set_title(query.value(query.record().indexOf("title"))
-                           .toString());
+                .toString());
         article->set_url(query.value(query.record().indexOf("url"))
-                         .toString());
+                .toString());
         article->set_text(query.value(query.record().indexOf("text"))
-                          .toString());
+                .toString());
         article->id_ = query.value(query.record().indexOf("id")).toInt();
         article->read_ =
-                query.value(query.record().indexOf("is_read")).toBool();
+            query.value(query.record().indexOf("is_read")).toBool();
         articles->push_back(article);
     }
+
     return true;
 }
 
 bool Article::existsInDbAndIsRead() {
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query("SELECT * FROM articles WHERE url = :url "
-                    "ORDER BY id DESC");
+            "ORDER BY id DESC");
     query.addBindValue(url_);
+
     if (!query.exec()) {
         ReportDatabaseError(query);
         return false;
     }
+
     if (query.next()) {
         return query.value(query.record().indexOf("is_read")).toBool();
-    } else {
+    }
+    else {
         return false;
     }
 }
@@ -87,17 +94,19 @@ bool Article::saveOrUpdate() {
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
     query.prepare("INSERT OR REPLACE INTO articles (title, url, text, feed_id, "
-                  "is_read)"
-                  " VALUES (:title, :url, :text, :feed_id, :is_read)");
+            "is_read)"
+            " VALUES (:title, :url, :text, :feed_id, :is_read)");
     query.addBindValue(title_);
     query.addBindValue(url_);
     query.addBindValue(text_);
     query.addBindValue(feed_->id());
     query.addBindValue(read_);
+
     if (!query.exec()) {
         ReportDatabaseError(query);
         return false;
     }
+
     return true;
 }
 

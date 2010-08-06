@@ -18,7 +18,7 @@ class Article;
 
 // This is a model class for RSS feeds.
 class Feed {
-  public:
+public:
     Feed();
     ~Feed();
 
@@ -67,8 +67,10 @@ class Feed {
     static Feed* loadByUrl(const QString& url);
     static int count();
     static bool createTable();
-    const bool isToDelete() {return to_delete_;}
-    void setToDelete(const bool to_delete){
+    const bool isToDelete() {
+        return to_delete_;
+    }
+    void setToDelete(const bool to_delete) {
         to_delete_ = to_delete;
     }
     // Load all feeds from the database. Return false if any error
@@ -77,8 +79,8 @@ class Feed {
     static bool all(vector<shared_ptr<Feed> >* feeds);
     ///@brief remove feed;
     bool removeOld();
-     
-  private:
+
+private:
     void initializeFromQuery(QSqlQuery* query);
     QString title_;
     QUrl site_url_;

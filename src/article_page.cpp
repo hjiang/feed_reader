@@ -18,13 +18,12 @@ namespace feed_reader {
 
 ArticlePage::ArticlePage(QWidget* parent)
         : QWidget(parent),
-          web_view_(new QWebView(this)) {
+        web_view_(new QWebView(this)) {
     QSizePolicy size_policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     web_view_->setSizePolicy(size_policy);
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(web_view_);
     setLayout(layout);
-
     using onyx::screen::ScreenProxy;
     WidgetUpdater& updater(Singleton<WidgetUpdater>::instance());
     updater.addWidget(web_view_, ScreenProxy::GU);

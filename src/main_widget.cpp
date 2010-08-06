@@ -24,15 +24,15 @@ namespace feed_reader {
 
 MainWidget::MainWidget(QWidget* parent)
         : QWidget(parent, Qt::FramelessWindowHint),
-          feed_list_model_(new FeedListModel(
-                                   this, new FeedFetcher(new RssFeedParser))),
-          article_list_model_(new ArticleListModel(this)),
-          // Just parent all widgets to this for now. They will be
-          // reparented by the layout anyway.
-          tab_widget_(new QTabWidget(this)),
-          feeds_page_(new FeedsPage(feed_list_model_, this)),
-          article_list_page_(new ArticleListPage(article_list_model_, this)),
-          article_page_(new ArticlePage(this)) {
+        feed_list_model_(new FeedListModel(
+                    this, new FeedFetcher(new RssFeedParser))),
+        article_list_model_(new ArticleListModel(this)),
+        // Just parent all widgets to this for now. They will be
+        // reparented by the layout anyway.
+        tab_widget_(new QTabWidget(this)),
+        feeds_page_(new FeedsPage(feed_list_model_, this)),
+        article_list_page_(new ArticleListPage(article_list_model_, this)),
+        article_page_(new ArticlePage(this)) {
     using onyx::screen::ScreenProxy;
     setAutoFillBackground(true);
     setBackgroundRole(QPalette::Base);
@@ -47,11 +47,10 @@ MainWidget::MainWidget(QWidget* parent)
     tab_widget_->addTab(article_list_page_, tr("Items"));
     tab_widget_->addTab(article_page_, tr("Article"));
     ui::StatusBar* status_bar = new ui::StatusBar(
-            this, ui::MESSAGE|ui::BATTERY|ui::CONNECTION|ui::CLOCK|
-            ui::SCREEN_REFRESH);
+        this, ui::MESSAGE | ui::BATTERY | ui::CONNECTION | ui::CLOCK |
+        ui::SCREEN_REFRESH);
     layout->addWidget(status_bar);
     setLayout(layout);
-
     connect(feeds_page_, SIGNAL(feedActivated(int)),
             this, SLOT(displayItemListForUrl(int)));
     connect(article_list_page_, SIGNAL(articleActivated(shared_ptr<Article>)),
@@ -81,11 +80,13 @@ void MainWidget::fitToScreen() {
     // build environment.
     int width = SCREEN_WIDTH;
     int height = SCREEN_HEIGHT;
+
     if (width <= 0 || height <= 0) {
         QRect screen_rect = QApplication::desktop()->screenGeometry();
         width = screen_rect.width();
         height = screen_rect.height();
     }
+
     resize(width, height);
 }
 
