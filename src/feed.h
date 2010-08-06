@@ -67,7 +67,10 @@ class Feed {
     static Feed* loadByUrl(const QString& url);
     static int count();
     static bool createTable();
-
+    const bool isToDelete() {return to_delete_;}
+    void setToDelete(const bool to_delete){
+        to_delete_ = to_delete;
+    }
     // Load all feeds from the database. Return false if any error
     // occured. The contents of feeds will be cleared if the operation succeeds.
     // But if an error occured, the feeds argument is not modified.
@@ -82,7 +85,7 @@ class Feed {
     QUrl feed_url_;
     int id_;
     vector<shared_ptr<Article> > articles_;
-
+    bool to_delete_;
     NO_COPY_AND_ASSIGN(Feed);
 };
 

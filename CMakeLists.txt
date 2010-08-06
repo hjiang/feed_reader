@@ -41,7 +41,7 @@ else(BUILD_FOR_ARM)
 
   # Use 600x800 to approximate device screen on PC.
   add_definitions(-DSCREEN_WIDTH=600)
-  add_definitions(-DSCREEN_HEIGHT=800)
+  add_definitions(-DSCREEN_HEIGHT=600)
   LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sdk/lib/x86)
 endif(BUILD_FOR_ARM)
 

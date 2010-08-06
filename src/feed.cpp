@@ -25,11 +25,13 @@ bool Feed::createTable() {
     QSqlQuery query;
     return query.exec("CREATE TABLE IF NOT EXISTS feeds"
                       "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                      " title, site_url, feed_url UNIQUE NOT NULL);");
+                      " title, site_url, delete_mark, feed_url UNIQUE NOT NULL);");
 }
 
 // static
 bool Feed::all(vector<shared_ptr<Feed> >* feeds) {
+    qDebug()<<__FILE__;
+    qDebug()<<__LINE__;
     createTable();
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
@@ -39,7 +41,8 @@ bool Feed::all(vector<shared_ptr<Feed> >* feeds) {
         return false;
     }
     feeds->clear();
-
+    qDebug()<<__FILE__;
+    qDebug()<<__LINE__;
     while (query.next()) {
         qDebug() << "Reading a feed record.";
         shared_ptr<Feed> feed(new Feed);
@@ -47,10 +50,12 @@ bool Feed::all(vector<shared_ptr<Feed> >* feeds) {
         feeds->push_back(feed);
         qDebug() << "Number of feeds: " << feeds->size();
     }
+    qDebug()<<__FILE__;
+    qDebug()<<__LINE__;
     return true;
 }
 
-Feed::Feed() : title_(), site_url_(), feed_url_(), id_(0), articles_() {}
+Feed::Feed() : title_(), site_url_(), feed_url_(), id_(0), articles_(), to_delete_(0) {}
 
 Feed::~Feed() {}
 
@@ -86,14 +91,15 @@ bool Feed::saveNew() {
     createTable();
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
-    if (!query.prepare("INSERT INTO feeds (title, site_url, feed_url) "
-                       "VALUES (:title, :site_url, :feed_url)")) {
+    if (!query.prepare("INSERT INTO feeds (title, site_url, feed_url, delete_mark) "
+                       "VALUES (:title, :site_url, :feed_url, :delete_mark )")) {
         ReportDatabaseError(query, "Error preparing to save new feeds");
         return false;
     }
     query.addBindValue(title_);
     query.addBindValue(site_url_.toString());
     query.addBindValue(feed_url_.toString());
+    query.addBindValue(0);
     qDebug() << "Saving new feed.";
     if (!query.exec()) {
         ReportDatabaseError(query, "Error saving new feeds");
@@ -140,9 +146,9 @@ int Feed::unreadCount() {
     shared_ptr<Database> db(Database::getShared());
     {
         QSqlQuery query;
-        if(!query.prepare("select count(id) from articles "
-                             "where feed_id=:feed_id and "
-                          "is_read='false'")) {
+        if (!query.prepare("select count(id) from articles "
+                           "where feed_id=:feed_id and "
+                           "is_read='false'")) {
             ReportDatabaseError(query, "Error preparing statement when getting"
                                 " unread count");
             return 0;
@@ -182,13 +188,15 @@ Feed* Feed::loadByUrl(const QString& url) {
 
 void Feed::initializeFromQuery(QSqlQuery* query) {
     id_ = query->value(query->record().indexOf("id"))
-            .toInt();
+          .toInt();
     set_title(query->value(query->record().indexOf("title"))
               .toString());
     set_site_url(query->value(query->record().indexOf("site_url"))
                  .toString());
     set_feed_url(query->value(query->record().indexOf("feed_url"))
                  .toString());
+    setToDelete(query->value(query->record().indexOf("delete_mark"))
+                .toBool());
 }
 
 //static
@@ -208,7 +216,7 @@ int Feed::count() {
 }
 
 bool Feed::removeOld() {
-    createTable();
+    // createTable();
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
     qDebug()<<"feed :preparing, feed_id is " +id_;
@@ -238,3 +246,4 @@ bool Feed::removeOld() {
 }
 }  // namespace feed_reader
 }  // namespace onyx
+// kate: indent-mode cstyle; space-indent on; indent-width 0; 

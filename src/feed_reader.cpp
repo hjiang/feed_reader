@@ -22,11 +22,12 @@ int main(int argc, char *argv[])
 {
     using namespace onyx::feed_reader;
     DELAYED_UPDATE_EVENT_TYPE = static_cast<QEvent::Type>(
-            QEvent::registerEventType(QEvent::User + 1));
+                                    QEvent::registerEventType(QEvent::User + 1));
     QApplication app(argc, argv);
-    QApplication::setFont(QFont("Sans Serif", 20));
+    QApplication::setFont(QFont("Sans Serif", 12));
     InitArgs args;
     args.db_path = QDir::homePath() + "/.onyx_feed_reader.db";
     scoped_ptr<MainWidget> mw(init(args));
     return app.exec();
 }
+// kate: indent-mode cstyle; space-indent on; indent-width 0; 

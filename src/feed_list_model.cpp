@@ -8,7 +8,7 @@
 
 #include "feed.h"
 #include "feed_fetcher.h"
-
+#include <QPainter>
 namespace onyx {
 namespace feed_reader {
 
@@ -16,8 +16,8 @@ static const int FEED_UPDATE_INTERVAL_IN_MS = 300000;  // 5 min
 
 FeedListModel::FeedListModel(QObject* parent, FeedFetcher* feed_fetcher)
         : QAbstractTableModel(parent),
-          feed_fetcher_(feed_fetcher),
-          timer_() {
+        feed_fetcher_(feed_fetcher),
+        timer_() {
     timer_.setSingleShot(false);
     timer_.start(FEED_UPDATE_INTERVAL_IN_MS);
     connect(feed_fetcher_.get(), SIGNAL(feedUpdated(shared_ptr<Feed>)),
@@ -33,36 +33,42 @@ int FeedListModel::rowCount(const QModelIndex &parent) const {
 }
 
 int FeedListModel::columnCount(const QModelIndex& parent) const {
-    return 2;
+    return 3;
 }
 
 QVariant FeedListModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid())
+    {
         return QVariant();
-
+    }
+    
     if (index.row() >= static_cast<int>(feeds_.size()))
+    {
         return QVariant();
-
-    if (role == Qt::DisplayRole) {
-        Feed* feed = feeds_.at(index.row()).get();
-        if (index.column() == 0) {
+    }
+    
+    Feed* feed = feeds_.at(index.row()).get();
+    
+    if (role==Qt::CheckStateRole && index.column() == 0) {
+        return feed->isToDelete() ? Qt::Checked : Qt::Unchecked;
+    } else if (role == Qt::DisplayRole) {
+        if (index.column() == 2) {
             // The first column shows feed titles.
             if (!feed->title().isEmpty()) {
                 return feed->title();
             } else {
                 return feed->feed_url().toString();
             }
-        } else if (index.column() == 1){
+        } else if (index.column() == 1) {
             return QString::number(feed->unreadCount());
-        } else {
+        } else if (index.column()>2) {
             qDebug() << "ERROR: trying to display more than two columns";
             return QVariant();
         }
-    } else if (role == FeedIdentifierRole){
+    } else if (role == FeedIdentifierRole) {
         return feeds_.at(index.row())->id();
-    } else {
-        return QVariant();
     }
+        return QVariant();
 }
 
 shared_ptr<Feed> FeedListModel::getFeed(int id) {
@@ -97,10 +103,10 @@ void FeedListModel::addFeed(const QUrl& url) {
 }
 
 void FeedListModel::updateFeed(shared_ptr<Feed> feed) {
-    if(!feed->update()) {
+    if (!feed->update()) {
         qDebug() << "Error updating feed.";
     }
-    if(!feed->saveArticles()) {
+    if (!feed->saveArticles()) {
         qDebug() << "Error saving articles.";
     }
     loadFromDatabase();
@@ -119,8 +125,55 @@ void FeedListModel::refreshAllFeeds() {
 }
 
 void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
-      feed->removeOld();
-      loadFromDatabase();
+    feed->removeOld();
+    loadFromDatabase();
 }
+
+
+Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const
+{
+    if (!index.isValid())
+        return 0;
+    if (index.column()==0)
+        return Qt::ItemIsEnabled  | Qt::ItemIsUserCheckable;//CheckBox
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int role)
+{
+    if (index.column()==0 && role==Qt::CheckStateRole)
+    {
+        if (Value == Qt::Checked) insertFeedToDelete(feeds_.at(index.row()));
+        if (Value == Qt::Unchecked) removeFeedToDelete(feeds_.at(index.row()));
+        return true;
+    }
+//     if (index.column() == 1 || index.column()==2)
+//     {
+//         return true;
+//     }
+    return false;
+}
+
+void FeedListModel::insertFeedToDelete(shared_ptr<Feed>  feed)
+{
+    feeds_delete_.append (feed);
+    feed->setToDelete(true);
+}
+
+void FeedListModel::removeFeedToDelete(shared_ptr<Feed> feed)
+{
+    feeds_delete_.removeOne(feed);
+    feed->setToDelete(false);
+}
+
+void FeedListModel::deleteFeeds()
+{
+    shared_ptr<Feed> feed;
+    foreach(feed, feeds_delete_){
+        deleteFeed(feed);
+    }
+}
+
 }  // namespace feed_reader
 }  // namespace onyx
+// kate: indent-mode cstyle; space-indent on; indent-width 0; 
