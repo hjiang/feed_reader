@@ -23,31 +23,6 @@ namespace feed_reader {
 
 static const QString TEST_DB_PATH(TEST_TMP_DIR "/testdb");
 
-TEST(DatabaseTest, BasicTest) {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(":memory:");
-    ASSERT_TRUE(db.open());
-    scoped_ptr<QSqlQuery> query(new QSqlQuery);
-    EXPECT_TRUE(query->exec("CREATE TABLE IF NOT EXISTS testtable "
-                            "(title, url)"));
-    EXPECT_TRUE(query->prepare("INSERT INTO testtable (title, url) "
-                               "VALUES (:title, :url)"));
-    query->bindValue(":title", "some title");
-    query->bindValue(":url", "some url");
-    EXPECT_TRUE(query->exec());
-    query->exec("SELECT * FROM testtable;");
-    EXPECT_TRUE(query->next());
-    EXPECT_EQ("some title",
-              query->value(query->record().indexOf("title")).toString());
-    EXPECT_EQ("some url",
-              query->value(query->record().indexOf("url")).toString());
-    query.reset();
-    db.close();
-    QString connection = db.connectionName();
-    db = QSqlDatabase();  // Decrease ref count.
-    QSqlDatabase::removeDatabase(connection);
-}
-
 class FeedTest: public ::testing::Test {
   public:
     void SetUp(){
