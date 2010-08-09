@@ -52,7 +52,6 @@ private:
     AddFeedDialog* add_feed_dialog_;
     QTableView* feed_list_view_;
     FeedListModel* feed_list_model_;
-    QItemSelectionModel *selectionModel_;
     // Those pointers are retained for testing
     QPushButton* add_feed_button_;
 

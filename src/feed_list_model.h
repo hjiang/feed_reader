@@ -6,7 +6,6 @@
 #include <QAbstractTableModel>
 #include <QObject>
 #include <QTimer>
-
 #include "onyx/base/base.h"
 #include "feed.h"
 

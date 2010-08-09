@@ -142,28 +142,29 @@ void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
 
 
 Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return 0;
+    }
 
-    if (index.column() == 0)
+    if (index.column() == 0) {
         return Qt::ItemIsEnabled  | Qt::ItemIsUserCheckable;//CheckBox
+    }
 
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int role) {
     if (index.column() == 0 && role == Qt::CheckStateRole) {
-        if (Value == Qt::Checked) insertFeedToDelete(feeds_.at(index.row()));
-
-        if (Value == Qt::Unchecked) removeFeedToDelete(feeds_.at(index.row()));
+        if (Value == Qt::Checked) {
+            insertFeedToDelete(feeds_.at(index.row()));
+        }
+        else {
+            removeFeedToDelete(feeds_.at(index.row()));
+        }
 
         return true;
     }
 
-//     if (index.column() == 1 || index.column()==2)
-//     {
-//         return true;
-//     }
     return false;
 }
 
