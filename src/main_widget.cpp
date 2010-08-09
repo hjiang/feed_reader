@@ -57,7 +57,8 @@ MainWidget::MainWidget(QWidget* parent)
             this, SLOT(displayArticle(shared_ptr<Article>)));
     connect(tab_widget_, SIGNAL(currentChanged(int)),
             this, SLOT(updateTab(int)));
-    feed_list_model_->refreshAllFeeds();
+    // refresh feeds in 3 seconds at start
+    QTimer::singleShot(3000,feed_list_model_,SLOT(refreshAllFeeds()));
     WidgetUpdater& updater(Singleton<WidgetUpdater>::instance());
     updater.addWidget(this, ScreenProxy::GU);
     updater.addWidget(tab_widget_, ScreenProxy::GU);
