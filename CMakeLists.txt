@@ -11,8 +11,9 @@ SET(TEST_OUTPUT_PATH ${PROJECT_BINARY_DIR}/unittests)
 SET(QT_PLUGINS_OUTPUT_PATH ${PROJECT_BINARY_DIR}/plugins)
 
 include(enable_qt)
-include(tc)
 include(onyx_test)
+include(strict_warning)
+include(tc)
 
 find_package(Qt4 4.5.2 COMPONENTS QtCore QtGui QtXml QtSql QtWebKit QtNetwork
   QtTest QtDBus REQUIRED)
@@ -27,13 +28,6 @@ include_directories(BEFORE
 if(BUILD_FOR_ARM)
   include(arm_toolchain)
   use_arm_toolchain()
-
-  set(TOOLCHAIN_PATH
-    /opt/freescale/usr/local/gcc-4.1.2-glibc-2.5-nptl-3/arm-none-linux-gnueabi)
-  include(CMakeForceCompiler)
-  cmake_force_c_compiler(${TOOLCHAIN_PATH}/bin/arm-linux-gcc GNU)
-  cmake_force_cxx_compiler(${TOOLCHAIN_PATH}/bin/arm-linux-g++ GNU)
-
   # Maximize window.
   add_definitions(-DSCREEN_WIDTH=-1 -DSCREEN_HEIGHT=-1 -DBUILD_FOR_ARM)
   LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sdk/lib/arm)
@@ -45,22 +39,6 @@ else(BUILD_FOR_ARM)
   LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sdk/lib/x86)
 endif(BUILD_FOR_ARM)
 
-macro(STRICT_WARNING TARGET)
-  if(DEBUG)
-    set_target_properties(${TARGET}
-      PROPERTIES
-      COMPILE_FLAGS "-Wall -Werror -g -ggdb"
-      CMAKE_EXE_LINKER_FLAGS "--no-undefined --fatal-warnings")
-  else(DEBUG)
-    set_target_properties(${TARGET}
-      PROPERTIES
-      COMPILE_FLAGS "-Wall -Werror"
-      CMAKE_EXE_LINKER_FLAGS "--no-undefined --fatal-warnings")
-  endif(DEBUG)
-endmacro(STRICT_WARNING)
-
-add_definitions(-DSHARE_ROOT="/usr/share")
-
 set(ONYX_LIBS onyx_sys onyx_ui onyx_wifi onyx_wpa onyx_screen onyx_data onyx_cms)
 ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE)
 IF (WIN32)
@@ -69,11 +47,6 @@ ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE_NAMED_PIPE)
 ELSE (WIN32)
 ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE_UNIX)
 ENDIF (WIN32)
-
-# Find ZLIB
-INCLUDE(FindZLIB)
-INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
-LINK_DIRECTORIES(${ZLIB_LIBRARIES})
 
 add_subdirectory(src)
 if(NOT BUILD_FOR_ARM)
