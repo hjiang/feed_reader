@@ -25,7 +25,7 @@ bool Feed::createTable() {
     QSqlQuery query;
     return query.exec("CREATE TABLE IF NOT EXISTS feeds"
             "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            " title, site_url, delete_mark, feed_url UNIQUE NOT NULL);");
+            " title, site_url, feed_url UNIQUE NOT NULL);");
 }
 
 // static
@@ -99,8 +99,8 @@ bool Feed::saveNew() {
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
 
-    if (!query.prepare("INSERT INTO feeds (title, site_url, feed_url, delete_mark) "
-            "VALUES (:title, :site_url, :feed_url, :delete_mark )")) {
+    if (!query.prepare("INSERT INTO feeds (title, site_url, feed_url) "
+            "VALUES (:title, :site_url, :feed_url)")) {
         ReportDatabaseError(query, "Error preparing to save new feeds");
         return false;
     }
@@ -108,7 +108,6 @@ bool Feed::saveNew() {
     query.addBindValue(title_);
     query.addBindValue(site_url_.toString());
     query.addBindValue(feed_url_.toString());
-    query.addBindValue(0);
     qDebug() << "Saving new feed.";
 
     if (!query.exec()) {
@@ -222,8 +221,6 @@ void Feed::initializeFromQuery(QSqlQuery* query) {
             .toString());
     set_feed_url(query->value(query->record().indexOf("feed_url"))
             .toString());
-    setToDelete(query->value(query->record().indexOf("delete_mark"))
-            .toBool());
 }
 
 //static
