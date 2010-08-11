@@ -1,9 +1,6 @@
 // -*- mode: c++; c-basic-offset: 4; -*-
-
 #include "feed_list_model.h"
-
 #include <QDebug>
-
 #include "onyx/base/base.h"
 
 #include "feed.h"
@@ -16,8 +13,8 @@ static const int FEED_UPDATE_INTERVAL_IN_MS = 300000;  // 5 min
 
 FeedListModel::FeedListModel(QObject* parent, FeedFetcher* feed_fetcher)
         : QAbstractTableModel(parent),
-        feed_fetcher_(feed_fetcher),
-        timer_() {
+          feed_fetcher_(feed_fetcher),
+          timer_() {
     timer_.setSingleShot(false);
     timer_.start(FEED_UPDATE_INTERVAL_IN_MS);
     connect(feed_fetcher_.get(), SIGNAL(feedUpdated(shared_ptr<Feed>)),
@@ -149,7 +146,9 @@ Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
     if (index.column() == 0) {
         return Qt::ItemIsEnabled  | Qt::ItemIsUserCheckable;//CheckBox
     }
-
+    if (index.column() == 1){
+        return Qt::ItemIsEnabled;
+    }
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
@@ -187,4 +186,3 @@ void FeedListModel::deleteFeeds() {
 
 }  // namespace feed_reader
 }  // namespace onyx
-// kate: indent-mode cstyle; space-indent on; indent-width 0;

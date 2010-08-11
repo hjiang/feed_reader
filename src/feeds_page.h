@@ -44,7 +44,7 @@ private slots:
     void addFeed();
     void handleActivated(const QModelIndex& index);
     void deleteFeed();
-    void deleteFeeds();///<call deleteFeed();
+    void deleteFeeds();
 
 private:
     friend class AcceptanceTest;
@@ -56,11 +56,9 @@ private:
     QPushButton* add_feed_button_;
 
     NO_COPY_AND_ASSIGN(FeedsPage);
-//   void Mark(QModelIndex arg1);
 };
 
 }  // namespace feed_reader
 }  // namespace onyx
 
 #endif  // ONYX_FEED_READER_FEEDS_PAGE_H__
-// kate: indent-mode cstyle; space-indent on; indent-width 0;

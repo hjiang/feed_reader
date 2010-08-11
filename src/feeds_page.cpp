@@ -10,13 +10,13 @@
 #include <QTableView>
 #include <QPushButton>
 #include <QVBoxLayout>
+
 #include "onyx/screen/screen_proxy.h"
 
 #include "add_feed_dialog.h"
 #include "feed_list_model.h"
 #include "singleton.h"
 #include "widget_updater.h"
-
 
 namespace onyx {
 namespace feed_reader {
@@ -25,14 +25,13 @@ using onyx::screen::ScreenProxy;
 
 FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
         : QWidget(parent),
-        add_feed_dialog_(new AddFeedDialog(this)),
-        feed_list_view_(new QTableView(this)),
-        feed_list_model_(feed_list_model) {
+          add_feed_dialog_(new AddFeedDialog(this)),
+          feed_list_view_(new QTableView(this)),
+          feed_list_model_(feed_list_model) {
     feed_list_view_->horizontalHeader()->hide();
     feed_list_view_->verticalHeader()->hide();
     feed_list_view_->setModel(feed_list_model_);
     feed_list_view_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //
     // The feeds page has a list of subscribed feeds and three
     // buttons.
     QPushButton* add_feed_button(new QPushButton(this));
@@ -58,17 +57,21 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     layout->addWidget(feed_list_view_);
     layout->addLayout(button_layout);
     setLayout(layout);
-    //
-    feed_list_view_->setSelectionBehavior(QAbstractItemView::SelectItems);
     // Set up connections.
-    connect(add_feed_button, SIGNAL(clicked()), this, SLOT(showAddFeedDialog()));
-    connect(add_feed_dialog_, SIGNAL(accepted()), this, SLOT(addFeed()));
-    //TODO: Show process bar
-//     connect(refresh_button, SIGNAL(clicked()), SLOT(fetchdialog()));
-    connect(refresh_button, SIGNAL(clicked()), feed_list_model_, SLOT(refreshAllFeeds()));
-    connect(quit_button, SIGNAL(clicked()), qApp, SLOT(quit()));
-    connect(feed_list_view_, SIGNAL(clicked(QModelIndex)), this, SLOT(handleActivated(const QModelIndex&)));
-    connect(delete_feed_button, SIGNAL(clicked()), this, SLOT(deleteFeeds()));
+    connect(add_feed_button, SIGNAL(clicked()),
+            this, SLOT(showAddFeedDialog()));
+    connect(add_feed_dialog_, SIGNAL(accepted()),
+            this, SLOT(addFeed()));
+    connect(refresh_button, SIGNAL(clicked()),
+            feed_list_model_, SLOT(refreshAllFeeds()));
+    connect(quit_button, SIGNAL(clicked()),
+            qApp, SLOT(quit()));
+
+    connect(feed_list_view_, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(handleActivated(const QModelIndex&)));
+
+    connect(delete_feed_button, SIGNAL(clicked()),
+            this, SLOT(deleteFeeds()));
     WidgetUpdater& updater(Singleton<WidgetUpdater>::instance());
     updater.addWidget(add_feed_button, ScreenProxy::GU);
     updater.addWidget(delete_feed_button, ScreenProxy::GU);
@@ -85,19 +88,17 @@ FeedsPage::~FeedsPage() {
 void FeedsPage::showEvent(QShowEvent* event) {
     // int total_width = 580;
     feed_list_view_->setColumnWidth(0, feed_list_view_->rowHeight(0));
-    feed_list_view_->setColumnWidth(1, feed_list_view_->rowHeight(0)*2);
-    feed_list_view_->setColumnWidth(2, parentWidget()->size().width() -  feed_list_view_->rowHeight(0)*3);
-    feed_list_view_->setAutoScroll(false);
+    feed_list_view_->setColumnWidth(1, feed_list_view_->rowHeight(0) * 2);
+    feed_list_view_->setColumnWidth(2, parentWidget()->width() - feed_list_view_->rowHeight(0) *3 - 30);
     QWidget::showEvent(event);
 }
 
 void FeedsPage::handleActivated(const QModelIndex& index) {
-    if (index.column() == 2) {
-        emit feedActivated(
+    if (index.column() == 2){
+    emit feedActivated(
             feed_list_view_->model()->data(
                 index, FeedListModel::FeedIdentifierRole).toInt());
     }
-
     return;
 }
 
@@ -114,6 +115,7 @@ void FeedsPage::addFeed() {
 }
 
 void FeedsPage::deleteFeed() {
+    //useless now
     int index = feed_list_view_->currentIndex().data(
                 FeedListModel::FeedIdentifierRole).toInt();
 
@@ -123,17 +125,12 @@ void FeedsPage::deleteFeed() {
 
     shared_ptr<Feed> feed = feed_list_model_->getFeed(index);
     feed_list_model_->deleteFeed(feed);
-    //TODO: refresh article list view; should emit a signal
-    //emit deleted();
 }
 
 void FeedsPage::deleteFeeds() {
     feed_list_model_->deleteFeeds();
-    //TODO: refresh article list view; should emit a signal
-    //emit deleted();
 }
-
 
 }  // namespace feed_reader
 }  // namespace onyx
-// kate: indent-mode cstyle; space-indent on; indent-width 0;
+

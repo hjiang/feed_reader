@@ -43,9 +43,6 @@ bool Feed::all(vector<shared_ptr<Feed> >* feeds) {
     }
 
     feeds->clear();
-    qDebug() << __FILE__;
-    qDebug() << __LINE__;
-
     while (query.next()) {
         qDebug() << "Reading a feed record.";
         shared_ptr<Feed> feed(new Feed);
@@ -54,8 +51,6 @@ bool Feed::all(vector<shared_ptr<Feed> >* feeds) {
         qDebug() << "Number of feeds: " << feeds->size();
     }
 
-    qDebug() << __FILE__;
-    qDebug() << __LINE__;
     return true;
 }
 
@@ -278,4 +273,4 @@ bool Feed::removeOld() {
 }
 }  // namespace feed_reader
 }  // namespace onyx
-// kate: indent-mode cstyle; space-indent on; indent-width 0;
+

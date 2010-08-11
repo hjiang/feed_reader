@@ -29,4 +29,4 @@ int main(int argc, char *argv[]) {
     scoped_ptr<MainWidget> mw(init(args));
     return app.exec();
 }
-// kate: indent-mode cstyle; space-indent on; indent-width 0;
+

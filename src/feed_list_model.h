@@ -54,4 +54,3 @@ private:
 }  // namespace onyx
 
 #endif  // ONYX_FEED_READER_FEED_LIST_MODEL_H__
-// kate: indent-mode cstyle; space-indent on; indent-width 0;
