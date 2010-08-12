@@ -147,8 +147,7 @@ bool RssFeedParser::parseMore() {
         xml_reader_.readNext();
         if (xml_reader_.isStartElement()) {
             handleStartElement();
-        }
-        else if (xml_reader_.isEndElement()) {
+        } else if (xml_reader_.isEndElement()) {
             handleEndElement();
         } else if (xml_reader_.isCharacters() && !xml_reader_.isWhitespace()) {
             current_text_ += xml_reader_.text().toString();

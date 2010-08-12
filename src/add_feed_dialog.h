@@ -17,7 +17,7 @@ namespace onyx {
 namespace feed_reader {
 
 class AddFeedDialog : public QDialog
-{   
+{
     Q_OBJECT;
 
   public:
