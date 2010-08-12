@@ -58,8 +58,7 @@ void AddFeedDialog::addClicked() {
                 this, tr("Empty URL"),
                 tr("Please enter an address to add a feed from."));
         url_edit_->setFocus();
-    }
-    else if (!url_.isValid() || url_.host().isEmpty()) {
+    } else if (!url_.isValid() || url_.host().isEmpty()) {
         QMessageBox::information(this, tr("Invalid URL"),
                 tr("Please enter a valid URL."));
         url_edit_->setFocus();
