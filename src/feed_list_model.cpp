@@ -1,11 +1,13 @@
 // -*- mode: c++; c-basic-offset: 4; -*-
+
 #include "feed_list_model.h"
 #include <QDebug>
+
 #include "onyx/base/base.h"
 
 #include "feed.h"
 #include "feed_fetcher.h"
-#include <QPainter>
+
 namespace onyx {
 namespace feed_reader {
 
@@ -52,20 +54,16 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
             // The first column shows feed titles.
             if (!feed->title().isEmpty()) {
                 return feed->title();
-            }
-            else {
+            } else {
                 return feed->feed_url().toString();
             }
-        }
-        else if (index.column() == 1) {
+        } else if (index.column() == 1) {
             return QString::number(feed->unreadCount());
-        }
-        else if (index.column() > 2) {
+        } else if (index.column() > 2) {
             qDebug() << "ERROR: trying to display more than two columns";
             return QVariant();
         }
-    }
-    else if (role == FeedIdentifierRole) {
+    } else if (role == FeedIdentifierRole) {
         return feeds_.at(index.row())->id();
     }
 
@@ -78,7 +76,6 @@ shared_ptr<Feed> FeedListModel::getFeed(int id) {
             return feeds_[i];
         }
     }
-
     return shared_ptr<Feed>();
 }
 
@@ -86,8 +83,7 @@ void FeedListModel::loadFromDatabase() {
     if (Feed::all(&feeds_)) {
         // Tell the view to query all data again.
         reset();
-    }
-    else {
+    } else {
         qDebug() << "Failed to load feeds from database.";
     }
 }
@@ -106,27 +102,23 @@ void FeedListModel::addFeed(const QUrl& url) {
 }
 
 void FeedListModel::updateFeed(shared_ptr<Feed> feed) {
-    if (!feed->update()) {
+    if(!feed->update()) {
         qDebug() << "Error updating feed.";
     }
 
-    if (!feed->saveArticles()) {
+    if(!feed->saveArticles()) {
         qDebug() << "Error saving articles.";
     }
-
     loadFromDatabase();
 }
 
 void FeedListModel::refreshAllFeeds() {
     vector<shared_ptr<Feed> > feeds;
-
     if (!Feed::all(&feeds)) {
         qDebug() << "Failed to load feeds from the database.";
         return;
     }
-
     qDebug() << "Refreshing " << feeds.size() << " feeds";
-
     for (size_t i = 0; i < feeds.size(); ++i) {
         feed_fetcher_->scheduleFetch(feeds[i]);
     }
@@ -136,7 +128,6 @@ void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
     feed->removeOld();
     loadFromDatabase();
 }
-
 
 Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
     if (!index.isValid()) {

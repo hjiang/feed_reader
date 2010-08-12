@@ -14,11 +14,11 @@ namespace feed_reader {
 class Feed;
 
 class RssFeedParser : public FeedParser {
-public:
+  public:
     RssFeedParser();
     virtual ~RssFeedParser();
 
-private:
+  private:
     virtual void startNewFeedInternal(shared_ptr<Feed> feed);
     virtual bool appendInternal(const QByteArray& data);
     virtual bool hasErrorInternal() const;

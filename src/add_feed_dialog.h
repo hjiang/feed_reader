@@ -16,21 +16,20 @@ class KeyBoard;
 namespace onyx {
 namespace feed_reader {
 
-class AddFeedDialog : public QDialog {
+class AddFeedDialog : public QDialog
+{   
     Q_OBJECT;
 
-public:
+  public:
     AddFeedDialog(QWidget *parent = 0);
     ~AddFeedDialog();
 
-    const QUrl& url() {
-        return url_;
-    }
+    const QUrl& url() { return url_; }
 
-public slots:
+  public slots:
     void addClicked();
 
-private:
+  private:
     friend class AcceptanceTest;
 
     ui::KeyBoard* key_board_;

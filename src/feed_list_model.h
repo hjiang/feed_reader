@@ -6,6 +6,7 @@
 #include <QAbstractTableModel>
 #include <QObject>
 #include <QTimer>
+
 #include "onyx/base/base.h"
 #include "feed.h"
 
@@ -18,7 +19,7 @@ class FeedFetcher;
 class FeedListModel : public QAbstractTableModel {
     Q_OBJECT;
 
-public:
+  public:
     enum FeedDataRole {
         FeedIdentifierRole = Qt::UserRole
     };
@@ -28,13 +29,13 @@ public:
     virtual ~FeedListModel();
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(
-        const QModelIndex& parent = QModelIndex()) const;
+            const QModelIndex& parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
     bool setData(const QModelIndex &index, const QVariant &Value, int role);
     void loadFromDatabase();
     shared_ptr<Feed> getFeed(int id);
     Qt::ItemFlags flags(const QModelIndex &index) const;
-public slots:
+  public slots:
     void addFeed(shared_ptr<Feed> feed);
     void addFeed(const QUrl& url);
     void refreshAllFeeds();
@@ -43,7 +44,8 @@ public slots:
     void deleteFeeds();///< call deleteFeed();
     void insertFeedToDelete(shared_ptr<Feed>  feed);
     void removeFeedToDelete(shared_ptr<Feed>  feed);
-private:
+
+  private:
     vector<shared_ptr<Feed> > feeds_;
     scoped_ptr<FeedFetcher> feed_fetcher_;
     QList<shared_ptr<Feed> > feeds_delete_;

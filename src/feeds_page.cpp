@@ -32,6 +32,7 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     feed_list_view_->verticalHeader()->hide();
     feed_list_view_->setModel(feed_list_model_);
     feed_list_view_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     // The feeds page has a list of subscribed feeds and three
     // buttons.
     QPushButton* add_feed_button(new QPushButton(this));
@@ -51,12 +52,14 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     button_layout->addWidget(refresh_button);
     button_layout->addWidget(delete_feed_button);
     button_layout->addWidget(quit_button);
+
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setSpacing(0);
     layout->setContentsMargins(1, 0, 1, 0);
     layout->addWidget(feed_list_view_);
     layout->addLayout(button_layout);
     setLayout(layout);
+
     // Set up connections.
     connect(add_feed_button, SIGNAL(clicked()),
             this, SLOT(showAddFeedDialog()));
@@ -67,7 +70,7 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     connect(quit_button, SIGNAL(clicked()),
             qApp, SLOT(quit()));
 
-    connect(feed_list_view_, SIGNAL(clicked(QModelIndex)),
+    connect(feed_list_view_, SIGNAL(const clicked(QModelIndex)),
             this, SLOT(handleActivated(const QModelIndex&)));
 
     connect(delete_feed_button, SIGNAL(clicked()),
@@ -78,6 +81,7 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     updater.addWidget(refresh_button, ScreenProxy::GU);
     updater.addWidget(quit_button, ScreenProxy::GU);
     updater.addWidget(feed_list_view_, ScreenProxy::GU);
+
     // Retain pointers for testing
     add_feed_button_ = add_feed_button;
 }
@@ -133,4 +137,3 @@ void FeedsPage::deleteFeeds() {
 
 }  // namespace feed_reader
 }  // namespace onyx
-

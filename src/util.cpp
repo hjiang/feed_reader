@@ -9,7 +9,7 @@ namespace onyx {
 namespace feed_reader {
 
 void ReportDatabaseError(const QSqlQuery& query,
-        const QString& msg) {
+                         const QString& msg) {
     qDebug() << msg;
     qDebug() << "Error processing query: " << query.executedQuery();
     const QSqlError& error(query.lastError());

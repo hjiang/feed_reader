@@ -30,22 +30,17 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
 
     if (role == Qt::DisplayRole) {
         return articles_.at(index.row())->title();
-    }
-    else if (role == ArticleIdentifierRole) {
+    } else if (role == ArticleIdentifierRole) {
         return articles_.at(index.row())->url();
-    }
-    else if (role == ArticleDisplayRole) {
+    } else if (role == ArticleDisplayRole) {
         return QVariant::fromValue(articles_.at(index.row()));
-    }
-    else if (role == Qt::FontRole) {
+    } else if (role == Qt::FontRole) {
         if (articles_.at(index.row())->read()) {
             return QVariant::fromValue(QFont("Serif", 16));
-        }
-        else {
+        } else {
             return QVariant::fromValue(QFont("Serif", 16, QFont::Bold));
         }
-    }
-    else {
+    } else {
         return QVariant();
     }
 }

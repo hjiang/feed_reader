@@ -13,10 +13,10 @@ namespace feed_reader {
 
 RssFeedParser::RssFeedParser()
         : FeedParser(),
-        feed_(),
-        xml_reader_(),
-        current_article_(),
-        current_text_() {
+          feed_(),
+          xml_reader_(),
+          current_article_(),
+          current_text_() {
 }
 
 RssFeedParser::~RssFeedParser() {
@@ -55,23 +55,21 @@ const shared_ptr<Feed> RssFeedParser::feedInternal() const {
 
 namespace {
 bool is_new_article(const Article& article,
-        const vector<shared_ptr<Article> >& articles) {
+                    const vector<shared_ptr<Article> >& articles) {
     for (size_t i = 0; i < articles.size(); ++i) {
         if (article.url() == articles[i]->url()) {
             return false;
         }
     }
-
     return true;
 }
 }
 
 void RssFeedParser::handleStartElement() {
     shared_ptr<QString> name(
-        new QString(xml_reader_.name().toString()));
+            new QString(xml_reader_.name().toString()));
     tag_stack_.push(name);
     current_text_.clear();
-
     if (*name == "item" || *name == "entry") {
         current_article_.reset(new Article(feed_));
     }
@@ -79,109 +77,98 @@ void RssFeedParser::handleStartElement() {
 
 void RssFeedParser::handleEndElement() {
     if (tag_stack_.size() &&
-            xml_reader_.name() == *(tag_stack_.top())) {
+        xml_reader_.name() == *(tag_stack_.top())) {
         tag_stack_.pop();
     }
 
     if (xml_reader_.name() == "title") {
         if (tag_stack_.size() &&
-                (*(tag_stack_.top()) == "channel" || *(tag_stack_.top()) == "feed")
-                &&
-                feed_->title().isEmpty()) {
+            (*(tag_stack_.top()) == "channel" || *(tag_stack_.top()) == "feed")
+            &&
+            feed_->title().isEmpty()) {
             feed_->set_title(current_text_);
         }
 
         if (tag_stack_.size() &&
-                (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
-                current_article_.get() &&
-                current_article_->title().isEmpty()) {
+            (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
+            current_article_.get() &&
+            current_article_->title().isEmpty()) {
             current_article_->set_title(current_text_);
         }
-    }
-    else if (xml_reader_.name() == "link" || xml_reader_.name() == "id") {
+    } else if (xml_reader_.name() == "link" || xml_reader_.name() == "id") {
         if (tag_stack_.size() && *(tag_stack_.top()) == "channel" &&
-                feed_->site_url().isEmpty()) {
+            feed_->site_url().isEmpty()) {
             feed_->set_site_url(current_text_);
         }
 
         if (tag_stack_.size() &&
-                (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
-                current_article_.get() &&
-                current_article_->url().isEmpty()) {
+            (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
+            current_article_.get() &&
+            current_article_->url().isEmpty()) {
             current_article_->set_url(current_text_);
         }
-    }
-    else if (xml_reader_.name() == "description") {
+    } else if (xml_reader_.name() == "description") {
         if (tag_stack_.size() &&
                 (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
                 current_article_.get() &&
                 current_article_->text().isEmpty()) {
             current_article_->set_text(current_text_);
         }
-    }
-    else if (xml_reader_.name() == "content" ||
+    } else if (xml_reader_.name() == "content" ||
             xml_reader_.namespaceUri() ==
             "http://purl.org/rss/1.0/modules/content/") {
         qDebug() << "prefix: " << xml_reader_.prefix();
 
         if (tag_stack_.size() &&
-                (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
-                current_article_.get()) {
+            (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
+            current_article_.get()) {
             // The content tag usually has more text than the
             // description tag, so we overright the text no matter
             // what.
             current_article_->set_text(current_text_);
         }
-    }
-    else if ((xml_reader_.name() == "item" ||
+    } else if ((xml_reader_.name() == "item" ||
             xml_reader_.name() == "entry") &&
             current_article_.get()) {
         qDebug() << "One article parsed.";
         feed_->mutable_articles()->push_back(current_article_);
-
         if (is_new_article(*current_article_, feed_->articles())) {
             new_articles_.push_back(current_article_);
         }
-
         current_article_.reset();
-    }
-    else {
+    } else {
         qDebug() << "Ignoring tag: " << xml_reader_.name();
     }
 }
 
 bool RssFeedParser::parseMore() {
     DCHECK(feed_.get());
-
     while (!xml_reader_.atEnd()) {
         xml_reader_.readNext();
-
         if (xml_reader_.isStartElement()) {
             handleStartElement();
         }
         else if (xml_reader_.isEndElement()) {
             handleEndElement();
-        }
-        else if (xml_reader_.isCharacters() && !xml_reader_.isWhitespace()) {
+        } else if (xml_reader_.isCharacters() && !xml_reader_.isWhitespace()) {
             current_text_ += xml_reader_.text().toString();
         }
     }
 
     if (xml_reader_.hasError() &&
-            xml_reader_.error() != QXmlStreamReader::PrematureEndOfDocumentError) {
+        xml_reader_.error() != QXmlStreamReader::PrematureEndOfDocumentError) {
         qWarning() << "XML ERROR:"
-        << xml_reader_.errorString();
+                   << xml_reader_.errorString();
         return false;
-    }
-    else {
+    } else {
         return true;
     }
 }
 
 void RssFeedParser::finalizeInternal() {
     feed_->mutable_articles()->insert(feed_->mutable_articles()->begin(),
-            new_articles_.begin(),
-            new_articles_.end());
+                                      new_articles_.begin(),
+                                      new_articles_.end());
 }
 
 }  // namespace feed_reader

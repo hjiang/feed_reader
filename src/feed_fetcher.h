@@ -18,22 +18,22 @@ class FeedParser;
 
 class FeedFetcher : public QObject {
     Q_OBJECT;
-public:
+  public:
     explicit FeedFetcher(FeedParser* parser);
     virtual ~FeedFetcher();
 
-public slots:
+  public slots:
     virtual void scheduleFetch(shared_ptr<Feed> feed);
 
-signals:
+  signals:
     void feedUpdated(shared_ptr<Feed>);
     void networkError();
 
-private slots:
+  private slots:
     void readData(const QHttpResponseHeader& response_header);
     void finishFetch(int id, bool error);
 
-private:
+  private:
     void startFetch();
     void parseXml();
 

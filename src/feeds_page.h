@@ -16,7 +16,6 @@ class QPushButton;
 class QModelIndex;
 class QShowEvent;
 class QUrl;
-class QItemSelectionModel;
 
 namespace onyx {
 namespace feed_reader {
@@ -27,31 +26,32 @@ class FeedListModel;
 
 class FeedsPage : public QWidget {
     Q_OBJECT;
-public:
+ public:
     explicit FeedsPage(FeedListModel* feed_list_model,
-            QWidget* parent = NULL);
+                       QWidget* parent = NULL);
     virtual ~FeedsPage();
 
-signals:
+  signals:
     void feedActivated(int);
     void pageRight();
 
-protected:
-    virtual void showEvent(QShowEvent* event);
+  protected:
+    virtual void showEvent (QShowEvent* event);
 
-private slots:
+  private slots:
     void showAddFeedDialog();
     void addFeed();
     void handleActivated(const QModelIndex& index);
     void deleteFeed();
     void deleteFeeds();
 
-private:
+  private:
     friend class AcceptanceTest;
 
     AddFeedDialog* add_feed_dialog_;
     QTableView* feed_list_view_;
     FeedListModel* feed_list_model_;
+
     // Those pointers are retained for testing
     QPushButton* add_feed_button_;
 

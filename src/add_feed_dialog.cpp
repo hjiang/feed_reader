@@ -17,11 +17,11 @@ using onyx::screen::ScreenProxy;
 
 AddFeedDialog::AddFeedDialog(QWidget *parent)
         : QDialog(parent),
-        key_board_(new ui::KeyBoard),
-        add_button_(new QPushButton(tr("Add"), this)),
-        cancel_button_(new QPushButton(tr("Cancel"), this)),
-        url_edit_(new QLineEdit("http://", this)),
-        url_("") {
+          key_board_(new ui::KeyBoard),
+          add_button_(new QPushButton(tr("Add"), this)),
+          cancel_button_(new QPushButton(tr("Cancel"), this)),
+          url_edit_(new QLineEdit("http://", this)),
+          url_("") {
     QLabel *findLabel = new QLabel(tr("Feed address:"));
     QHBoxLayout *hlayout = new QHBoxLayout;
     hlayout->addWidget(findLabel);
@@ -55,21 +55,19 @@ void AddFeedDialog::addClicked() {
 
     if (url_.isEmpty()) {
         QMessageBox::information(
-            this, tr("Empty URL"),
-            tr("Please enter an address to add a feed from."));
+                this, tr("Empty URL"),
+                tr("Please enter an address to add a feed from."));
         url_edit_->setFocus();
     }
     else if (!url_.isValid() || url_.host().isEmpty()) {
         QMessageBox::information(this, tr("Invalid URL"),
                 tr("Please enter a valid URL."));
         url_edit_->setFocus();
-    }
-    else if (url_.scheme() != "http" && url_.scheme() != "https") {
+    } else if (url_.scheme() != "http" && url_.scheme() != "https") {
         QMessageBox::information(this, tr("Unsupported protocol"),
                 tr("Only http and https are supported."));
         url_edit_->setFocus();
-    }
-    else {
+    } else {
         accept();
         url_edit_->setFocus();
         url_edit_->setText("http://");

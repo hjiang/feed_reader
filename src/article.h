@@ -17,44 +17,30 @@ namespace feed_reader {
 class Feed;
 
 class Article {
-public:
+  public:
     explicit Article(shared_ptr<Feed> feed) : feed_(feed), read_(false) {};
     ~Article() {};
 
     static bool createTableIfNeeded();
     static bool loadByFeed(shared_ptr<Feed> feed,
-            vector<shared_ptr<Article> >* articles);
+                           vector<shared_ptr<Article> >* articles);
 
-    const QString& title() const {
-        return title_;
-    };
-    const QString& url() const {
-        return url_;
-    }
-    const QString& text() const {
-        return text_;
-    }
-    bool read() const {
-        return read_;
-    }
+    const QString& title() const { return title_; };
+    const QString& url() const { return url_; }
+    const QString& text() const { return text_; }
+    bool read() const { return read_; }
 
     // This article exists in the database and is marked as "is read".
     bool existsInDbAndIsRead();
     // Set the title, stripping any <...> tags.
     void set_title(const QString& title);
 
-    void set_url(const QString& url) {
-        url_ = url;
-    }
-    void set_text(const QString& text) {
-        text_ = text;
-    }
-    void set_read(bool read) {
-        read_ = read;
-    }
+    void set_url(const QString& url) { url_ = url; }
+    void set_text(const QString& text) { text_ = text; }
+    void set_read(bool read) { read_ = read; }
     bool saveOrUpdate();
 
-private:
+  private:
     shared_ptr<Feed> feed_;
     QString title_;
     QString url_;

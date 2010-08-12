@@ -15,27 +15,17 @@ namespace feed_reader {
 
 // TODO: expose a method to reset the feed.
 class FeedParser {
-public:
+  public:
     FeedParser() {}
     virtual ~FeedParser() {};
     void startNewFeed(shared_ptr<Feed> feed /* outputv */) {
         startNewFeedInternal(feed);
     };
-    bool append(const QByteArray& data) {
-        return appendInternal(data);
-    }
-    bool hasError() const {
-        return hasErrorInternal();
-    }
-    QString errorString() const {
-        return errorStringInternal();
-    }
-    bool finished() const {
-        return finishedInternal();
-    }
-    const shared_ptr<Feed> feed() const {
-        return feedInternal();
-    }
+    bool append(const QByteArray& data) { return appendInternal(data); }
+    bool hasError() const { return hasErrorInternal(); }
+    QString errorString() const { return errorStringInternal(); }
+    bool finished() const { return finishedInternal(); }
+    const shared_ptr<Feed> feed() const { return feedInternal(); }
     // Do final processing of a feed. hasError() must be false before
     // calling this function.
     void finalize() {
@@ -43,7 +33,7 @@ public:
         finalizeInternal();
     }
 
-private:
+  private:
     virtual void startNewFeedInternal(shared_ptr<Feed> feed) = 0;
     virtual bool appendInternal(const QByteArray& data) = 0;
     virtual bool hasErrorInternal() const = 0;
