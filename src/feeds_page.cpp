@@ -39,6 +39,7 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     QPushButton* refresh_button(new QPushButton(this));
     QPushButton* delete_feed_button(new QPushButton(this));
     QPushButton* quit_button(new QPushButton(this));
+    
     // Set labels and size policies.
     add_feed_button->setText(tr("Add feed"));
     refresh_button->setText(tr("Refresh"));
@@ -46,6 +47,7 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     quit_button->setText(tr("Quit"));
     QSizePolicy size_policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     feed_list_view_->setSizePolicy(size_policy);
+
     // Set up layout and sub-layout
     QLayout* button_layout = new QHBoxLayout;
     button_layout->addWidget(add_feed_button);
@@ -70,7 +72,7 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     connect(quit_button, SIGNAL(clicked()),
             qApp, SLOT(quit()));
 
-    connect(feed_list_view_, SIGNAL(clicked(const QModelIndex)),
+    connect(feed_list_view_, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(handleActivated(const QModelIndex&)));
 
     connect(delete_feed_button, SIGNAL(clicked()),

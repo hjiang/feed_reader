@@ -145,7 +145,7 @@ int Feed::unreadCount() {
                              "where feed_id=:feed_id and "
                           "is_read='false'")) {
             ReportDatabaseError(query, "Error preparing statement when getting"
-                              " unread count");
+                                " unread count");
             return 0;
         }
         query.addBindValue(id_);

@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 {
     using namespace onyx::feed_reader;
     DELAYED_UPDATE_EVENT_TYPE = static_cast<QEvent::Type>(
-                     QEvent::registerEventType(QEvent::User + 1));
+            QEvent::registerEventType(QEvent::User + 1));
     QApplication app(argc, argv);
     QApplication::setFont(QFont("Sans Serif", 20));
     InitArgs args;

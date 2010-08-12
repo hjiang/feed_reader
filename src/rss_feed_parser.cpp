@@ -115,7 +115,6 @@ void RssFeedParser::handleEndElement() {
                xml_reader_.namespaceUri() ==
                "http://purl.org/rss/1.0/modules/content/") {
         qDebug() << "prefix: " << xml_reader_.prefix();
-
         if (tag_stack_.size() &&
             (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
             current_article_.get()) {
@@ -126,7 +125,7 @@ void RssFeedParser::handleEndElement() {
         }
     } else if ((xml_reader_.name() == "item" ||
                 xml_reader_.name() == "entry") &&
-                current_article_.get()) {
+               current_article_.get()) {
         qDebug() << "One article parsed.";
         feed_->mutable_articles()->push_back(current_article_);
         if (is_new_article(*current_article_, feed_->articles())) {
