@@ -6,7 +6,8 @@
 #include <QtGui>
 
 #include "onyx/ui/keyboard.h"
-
+#include "onyx/ui/buttons.h"
+#include "onyx/ui/line_edit.h"
 #include "singleton.h"
 #include "widget_updater.h"
 
@@ -18,9 +19,9 @@ using onyx::screen::ScreenProxy;
 AddFeedDialog::AddFeedDialog(QWidget *parent)
         : QDialog(parent),
           key_board_(new ui::KeyBoard),
-          add_button_(new QPushButton(tr("Add"), this)),
-          cancel_button_(new QPushButton(tr("Cancel"), this)),
-          url_edit_(new QLineEdit("http://", this)),
+          add_button_(new ui::OnyxPushButton(tr("Add"), this)),
+          cancel_button_(new ui::OnyxPushButton(tr("Cancel"), this)),
+          url_edit_(new ui::OnyxLineEdit("http://", this)),
           url_("") {
     QLabel *findLabel = new QLabel(tr("Feed address:"));
     QHBoxLayout *hlayout = new QHBoxLayout;
