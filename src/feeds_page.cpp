@@ -8,7 +8,7 @@
 #include <QKeyEvent>
 #include <QLayout>
 #include <QTableView>
-#include <QPushButton>
+
 #include <QVBoxLayout>
 
 #include "onyx/screen/screen_proxy.h"
@@ -35,10 +35,10 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
 
     // The feeds page has a list of subscribed feeds and three
     // buttons.
-    QPushButton* add_feed_button(new QPushButton(this));
-    QPushButton* refresh_button(new QPushButton(this));
-    QPushButton* delete_feed_button(new QPushButton(this));
-    QPushButton* quit_button(new QPushButton(this));
+    ui::OnyxPushButton* add_feed_button(new ui::OnyxPushButton("",this));
+    ui::OnyxPushButton* refresh_button(new ui::OnyxPushButton("",this));
+    ui::OnyxPushButton* delete_feed_button(new ui::OnyxPushButton("",this));
+    ui::OnyxPushButton* quit_button(new ui::OnyxPushButton("",this));
     
     // Set labels and size policies.
     add_feed_button->setText(tr("Add feed"));

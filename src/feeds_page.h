@@ -7,6 +7,7 @@
 #include <QWidget>
 
 #include "onyx/base/base.h"
+#include "onyx/ui/buttons.h"
 
 #include "feed.h"
 
@@ -38,7 +39,6 @@ class FeedsPage : public QWidget {
   protected:
     virtual void showEvent (QShowEvent* event);
     // virtual void keyPressEvent(QKeyEvent* event);
-
   private slots:
     void showAddFeedDialog();
     void addFeed();
@@ -54,7 +54,7 @@ class FeedsPage : public QWidget {
     FeedListModel* feed_list_model_;
 
     // Those pointers are retained for testing
-    QPushButton* add_feed_button_;
+    ui::OnyxPushButton* add_feed_button_;
 
     NO_COPY_AND_ASSIGN(FeedsPage);
 };
