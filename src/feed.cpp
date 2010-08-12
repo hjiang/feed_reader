@@ -86,13 +86,11 @@ bool Feed::saveNew() {
     createTable();
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
-
     if (!query.prepare("INSERT INTO feeds (title, site_url, feed_url) "
                        "VALUES (:title, :site_url, :feed_url)")) {
         ReportDatabaseError(query, "Error preparing to save new feeds");
         return false;
     }
-
     query.addBindValue(title_);
     query.addBindValue(site_url_.toString());
     query.addBindValue(feed_url_.toString());
@@ -120,7 +118,6 @@ bool Feed::update() {
     shared_ptr<Database> db(Database::getShared());
     {
         QSqlQuery query;
-
         if (!query.prepare("UPDATE feeds SET "
                            "title=:title, site_url=:site_url "
                            "WHERE feed_url=:feed_url")) {
@@ -148,7 +145,7 @@ int Feed::unreadCount() {
                              "where feed_id=:feed_id and "
                           "is_read='false'")) {
             ReportDatabaseError(query, "Error preparing statement when getting"
-                               " unread count");
+                              " unread count");
             return 0;
         }
         query.addBindValue(id_);
@@ -174,7 +171,6 @@ Feed* Feed::loadByUrl(const QString& url) {
         ReportDatabaseError(query, "Error loading feed by url.");
         return NULL;
     }
-
     if (query.next()) {
         scoped_ptr<Feed> feed(new Feed);
         feed->initializeFromQuery(&query);

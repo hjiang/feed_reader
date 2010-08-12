@@ -37,30 +37,26 @@ bool Article::loadByFeed(shared_ptr<Feed> feed,
     QSqlQuery query("SELECT * FROM articles WHERE feed_id = :feed_id "
                     "ORDER BY id DESC");
     query.addBindValue(feed->id());
-
     if (!query.exec()) {
         ReportDatabaseError(query);
         return false;
     }
-
     qDebug() << query.size() << " articles loaded from database.";
     articles->clear();
-
     while (query.next()) {
         // FIXME: Ony need feed_id
         shared_ptr<Article> article(new Article(feed));
         article->set_title(query.value(query.record().indexOf("title"))
                            .toString());
         article->set_url(query.value(query.record().indexOf("url"))
-                           .toString());
+                         .toString());
         article->set_text(query.value(query.record().indexOf("text"))
-                           .toString());
+                          .toString());
         article->id_ = query.value(query.record().indexOf("id")).toInt();
         article->read_ =
                 query.value(query.record().indexOf("is_read")).toBool();
         articles->push_back(article);
     }
-
     return true;
 }
 

@@ -25,7 +25,7 @@ class Article {
     static bool loadByFeed(shared_ptr<Feed> feed,
                            vector<shared_ptr<Article> >* articles);
 
-    const QString& title() const { return title_; };
+    const QString& title() const {return title_; };
     const QString& url() const { return url_; }
     const QString& text() const { return text_; }
     bool read() const { return read_; }

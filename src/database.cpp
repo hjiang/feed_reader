@@ -31,8 +31,8 @@ Database::Database()
                 0,
                 QApplication::tr("Cannot open database"),
                 QApplication::tr(
-                         "Unable to create or open the feeds database.\n"
-                         "Click Cancel to exit."),
+                        "Unable to create or open the feeds database.\n"
+                        "Click Cancel to exit."),
                 QMessageBox::Cancel);
     }
 }

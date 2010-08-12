@@ -70,7 +70,7 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     connect(quit_button, SIGNAL(clicked()),
             qApp, SLOT(quit()));
 
-    connect(feed_list_view_, SIGNAL(const clicked(QModelIndex)),
+    connect(feed_list_view_, SIGNAL(clicked(const QModelIndex)),
             this, SLOT(handleActivated(const QModelIndex&)));
 
     connect(delete_feed_button, SIGNAL(clicked()),
@@ -89,6 +89,13 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
 FeedsPage::~FeedsPage() {
 }
 
+// void FeedsPage::keyPressEvent(QKeyEvent* event) {
+//     qDebug() << "Key code: " << event->key();
+//     const int key = event->key();
+//     if (key == Qt::Key_Right) {
+//         emit pageRight();
+//     }
+// }
 void FeedsPage::showEvent(QShowEvent* event) {
     // int total_width = 580;
     feed_list_view_->setColumnWidth(0, feed_list_view_->rowHeight(0));
@@ -101,7 +108,7 @@ void FeedsPage::handleActivated(const QModelIndex& index) {
     if (index.column() == 2){
     emit feedActivated(
             feed_list_view_->model()->data(
-                index, FeedListModel::FeedIdentifierRole).toInt());
+                    index, FeedListModel::FeedIdentifierRole).toInt());
     }
     return;
 }

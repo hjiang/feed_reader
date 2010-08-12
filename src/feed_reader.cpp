@@ -18,7 +18,8 @@
 #error "Building for ARM but QT_ARCH_ARM is not set!"
 #endif
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     using namespace onyx::feed_reader;
     DELAYED_UPDATE_EVENT_TYPE = static_cast<QEvent::Type>(
                      QEvent::registerEventType(QEvent::User + 1));

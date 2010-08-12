@@ -34,6 +34,7 @@ class FeedListModel : public QAbstractTableModel {
     bool setData(const QModelIndex &index, const QVariant &Value, int role);
     void loadFromDatabase();
     shared_ptr<Feed> getFeed(int id);
+
     Qt::ItemFlags flags(const QModelIndex &index) const;
   public slots:
     void addFeed(shared_ptr<Feed> feed);

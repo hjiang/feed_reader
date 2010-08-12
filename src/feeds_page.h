@@ -26,7 +26,7 @@ class FeedListModel;
 
 class FeedsPage : public QWidget {
     Q_OBJECT;
- public:
+  public:
     explicit FeedsPage(FeedListModel* feed_list_model,
                        QWidget* parent = NULL);
     virtual ~FeedsPage();
@@ -37,6 +37,7 @@ class FeedsPage : public QWidget {
 
   protected:
     virtual void showEvent (QShowEvent* event);
+    // virtual void keyPressEvent(QKeyEvent* event);
 
   private slots:
     void showAddFeedDialog();

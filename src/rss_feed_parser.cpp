@@ -80,7 +80,6 @@ void RssFeedParser::handleEndElement() {
         xml_reader_.name() == *(tag_stack_.top())) {
         tag_stack_.pop();
     }
-
     if (xml_reader_.name() == "title") {
         if (tag_stack_.size() &&
             (*(tag_stack_.top()) == "channel" || *(tag_stack_.top()) == "feed")
@@ -88,7 +87,6 @@ void RssFeedParser::handleEndElement() {
             feed_->title().isEmpty()) {
             feed_->set_title(current_text_);
         }
-
         if (tag_stack_.size() &&
             (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
             current_article_.get() &&
@@ -100,7 +98,6 @@ void RssFeedParser::handleEndElement() {
             feed_->site_url().isEmpty()) {
             feed_->set_site_url(current_text_);
         }
-
         if (tag_stack_.size() &&
             (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
             current_article_.get() &&
@@ -109,14 +106,14 @@ void RssFeedParser::handleEndElement() {
         }
     } else if (xml_reader_.name() == "description") {
         if (tag_stack_.size() &&
-                (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
-                current_article_.get() &&
-                current_article_->text().isEmpty()) {
+            (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
+            current_article_.get() &&
+            current_article_->text().isEmpty()) {
             current_article_->set_text(current_text_);
         }
     } else if (xml_reader_.name() == "content" ||
-            xml_reader_.namespaceUri() ==
-            "http://purl.org/rss/1.0/modules/content/") {
+               xml_reader_.namespaceUri() ==
+               "http://purl.org/rss/1.0/modules/content/") {
         qDebug() << "prefix: " << xml_reader_.prefix();
 
         if (tag_stack_.size() &&
@@ -128,8 +125,8 @@ void RssFeedParser::handleEndElement() {
             current_article_->set_text(current_text_);
         }
     } else if ((xml_reader_.name() == "item" ||
-            xml_reader_.name() == "entry") &&
-            current_article_.get()) {
+                xml_reader_.name() == "entry") &&
+                current_article_.get()) {
         qDebug() << "One article parsed.";
         feed_->mutable_articles()->push_back(current_article_);
         if (is_new_article(*current_article_, feed_->articles())) {
@@ -153,7 +150,6 @@ bool RssFeedParser::parseMore() {
             current_text_ += xml_reader_.text().toString();
         }
     }
-
     if (xml_reader_.hasError() &&
         xml_reader_.error() != QXmlStreamReader::PrematureEndOfDocumentError) {
         qWarning() << "XML ERROR:"

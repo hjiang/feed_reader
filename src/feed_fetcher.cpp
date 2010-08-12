@@ -83,7 +83,7 @@ void FeedFetcher::readData(const QHttpResponseHeader& response_header) {
         qDebug() << bytes.size() << " bytes received.";
         if (!impl_->parser_->append(bytes)) {
             qDebug() << "Error parsing feed: "
-            << impl_->parser_->errorString();
+                     << impl_->parser_->errorString();
         }
     } else {
         qDebug() << "Received non-200 response code: "
@@ -107,7 +107,7 @@ void FeedFetcher::finishFetch(int connection_id, bool error) {
         } else {
             if (impl_->parser_->hasError()) {
                 qDebug() << "Error parsing feed: "
-                << impl_->parser_->errorString();
+                         << impl_->parser_->errorString();
             } else if (impl_->parser_->finished()) {
                 impl_->parser_->finalize();
                 emit feedUpdated(impl_->parser_->feed());

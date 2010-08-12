@@ -1,6 +1,7 @@
 // -*- mode: c++; c-basic-offset: 4; -*-
 
 #include "feed_list_model.h"
+
 #include <QDebug>
 
 #include "onyx/base/base.h"
@@ -57,13 +58,13 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
             } else {
                 return feed->feed_url().toString();
             }
-        } else if (index.column() == 1) {
+        } else if (index.column() == 1){
             return QString::number(feed->unreadCount());
         } else if (index.column() > 2) {
             qDebug() << "ERROR: trying to display more than two columns";
             return QVariant();
         }
-    } else if (role == FeedIdentifierRole) {
+    } else if (role == FeedIdentifierRole){
         return feeds_.at(index.row())->id();
     }
 
@@ -105,7 +106,6 @@ void FeedListModel::updateFeed(shared_ptr<Feed> feed) {
     if(!feed->update()) {
         qDebug() << "Error updating feed.";
     }
-
     if(!feed->saveArticles()) {
         qDebug() << "Error saving articles.";
     }

@@ -60,11 +60,11 @@ void AddFeedDialog::addClicked() {
         url_edit_->setFocus();
     } else if (!url_.isValid() || url_.host().isEmpty()) {
         QMessageBox::information(this, tr("Invalid URL"),
-                tr("Please enter a valid URL."));
+                                 tr("Please enter a valid URL."));
         url_edit_->setFocus();
     } else if (url_.scheme() != "http" && url_.scheme() != "https") {
         QMessageBox::information(this, tr("Unsupported protocol"),
-                tr("Only http and https are supported."));
+                                 tr("Only http and https are supported."));
         url_edit_->setFocus();
     } else {
         accept();
