@@ -48,7 +48,7 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
     Feed* feed = feeds_.at(index.row()).get();
 
     if (role == Qt::CheckStateRole && index.column() == 0) {
-        return feed->isToDelete() ? Qt::Checked : Qt::Unchecked;
+        return feed->to_delete() ? Qt::Checked : Qt::Unchecked;
     }
     else if (role == Qt::DisplayRole) {
         if (index.column() == 2) {
@@ -125,7 +125,7 @@ void FeedListModel::refreshAllFeeds() {
 }
 
 void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
-    feed->removeOld();
+    feed->remove();
     loadFromDatabase();
 }
 
@@ -146,10 +146,10 @@ Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
 bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int role) {
     if (index.column() == 0 && role == Qt::CheckStateRole) {
         if (Value == Qt::Checked) {
-            insertFeedToDelete(feeds_.at(index.row()));
+            feeds_.at(index.row())->set_to_delete(true);
         }
         else {
-            removeFeedToDelete(feeds_.at(index.row()));
+            feeds_.at(index.row())->set_to_delete(false);
         }
 
         return true;
@@ -159,19 +159,19 @@ bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int
 }
 
 void FeedListModel::insertFeedToDelete(shared_ptr<Feed>  feed) {
-    feeds_delete_.append(feed);
-    feed->setToDelete(true);
+    feed->set_to_delete(true);
 }
 
 void FeedListModel::removeFeedToDelete(shared_ptr<Feed> feed) {
-    feeds_delete_.removeOne(feed);
-    feed->setToDelete(false);
+    feed->set_to_delete(false);
 }
 
 void FeedListModel::deleteFeeds() {
     shared_ptr<Feed> feed;
-    foreach(feed, feeds_delete_) {
-        deleteFeed(feed);
+    foreach(feed, feeds_) {
+        if (feed->to_delete()){
+            deleteFeed(feed);
+        }
     }
 }
 

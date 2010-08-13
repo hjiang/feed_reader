@@ -208,7 +208,7 @@ int Feed::count() {
     }
 }
 
-bool Feed::removeOld() {
+bool Feed::remove() {
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
     qDebug() << "feed :preparing, feed_id is " + id_;

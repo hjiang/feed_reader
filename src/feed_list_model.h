@@ -49,7 +49,6 @@ class FeedListModel : public QAbstractTableModel {
   private:
     vector<shared_ptr<Feed> > feeds_;
     scoped_ptr<FeedFetcher> feed_fetcher_;
-    QList<shared_ptr<Feed> > feeds_delete_;
     QTimer timer_;
 };
 

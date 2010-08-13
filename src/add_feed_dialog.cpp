@@ -8,6 +8,8 @@
 #include "onyx/ui/keyboard.h"
 #include "onyx/ui/buttons.h"
 #include "onyx/ui/line_edit.h"
+#include "onyx/ui/label.h"
+
 #include "singleton.h"
 #include "widget_updater.h"
 
@@ -23,7 +25,7 @@ AddFeedDialog::AddFeedDialog(QWidget *parent)
           cancel_button_(new ui::OnyxPushButton(tr("Cancel"), this)),
           url_edit_(new ui::OnyxLineEdit("http://", this)),
           url_("") {
-    QLabel *findLabel = new QLabel(tr("Feed address:"));
+    ui::OnyxLabel *findLabel = new ui::OnyxLabel(tr("Feed address:"));
     QHBoxLayout *hlayout = new QHBoxLayout;
     hlayout->addWidget(findLabel);
     hlayout->addWidget(url_edit_);

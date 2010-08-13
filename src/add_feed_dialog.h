@@ -6,9 +6,6 @@
 #include <QDialog>
 #include <QUrl>
 
-class QLineEdit;
-class QPushButton;
-
 namespace ui {
 class KeyBoard;
 class OnyxPushButton;
