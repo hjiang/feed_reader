@@ -22,3 +22,7 @@ And the X86 libraries and the ARM libraries should be placed at
 and
     sdk/lib/arm
 respectively.
+
+## Contact
+
+Questions and comments should be sent to hjiang@onyx-international.com.
