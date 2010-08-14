@@ -100,14 +100,15 @@ FeedsPage::~FeedsPage() {
 // }
 void FeedsPage::showEvent(QShowEvent* event) {
     // int total_width = 580;
-    feed_list_view_->setColumnWidth(0, feed_list_view_->rowHeight(0));
+    int width = QApplication::desktop()->screenGeometry().width();
+    feed_list_view_->setColumnWidth(2, feed_list_view_->rowHeight(0));
     feed_list_view_->setColumnWidth(1, feed_list_view_->rowHeight(0) * 2);
-    feed_list_view_->setColumnWidth(2, parentWidget()->width() - feed_list_view_->rowHeight(0) *3 - 30);
+    feed_list_view_->setColumnWidth(0, width - feed_list_view_->rowHeight(0)*4 );
     QWidget::showEvent(event);
 }
 
 void FeedsPage::handleActivated(const QModelIndex& index) {
-    if (index.column() == 2){
+    if (index.column() == 0){
     emit feedActivated(
             feed_list_view_->model()->data(
                     index, FeedListModel::FeedIdentifierRole).toInt());
@@ -125,19 +126,6 @@ void FeedsPage::showAddFeedDialog() {
 
 void FeedsPage::addFeed() {
     feed_list_model_->addFeed(add_feed_dialog_->url());
-}
-
-void FeedsPage::deleteFeed() {
-    //useless now
-    int index = feed_list_view_->currentIndex().data(
-                FeedListModel::FeedIdentifierRole).toInt();
-
-    if (index < 0) {
-        return;
-    }
-
-    shared_ptr<Feed> feed = feed_list_model_->getFeed(index);
-    feed_list_model_->deleteFeed(feed);
 }
 
 void FeedsPage::deleteFeeds() {

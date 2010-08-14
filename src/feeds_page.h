@@ -43,7 +43,6 @@ class FeedsPage : public QWidget {
     void showAddFeedDialog();
     void addFeed();
     void handleActivated(const QModelIndex& index);
-    void deleteFeed();
     void deleteFeeds();
 
   private:

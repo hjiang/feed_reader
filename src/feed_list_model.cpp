@@ -47,11 +47,11 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
 
     Feed* feed = feeds_.at(index.row()).get();
 
-    if (role == Qt::CheckStateRole && index.column() == 0) {
+    if (role == Qt::CheckStateRole && index.column() == 3) {
         return feed->to_delete() ? Qt::Checked : Qt::Unchecked;
     }
     else if (role == Qt::DisplayRole) {
-        if (index.column() == 2) {
+        if (index.column() == 0) {
             // The first column shows feed titles.
             if (!feed->title().isEmpty()) {
                 return feed->title();
@@ -59,7 +59,7 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
                 return feed->feed_url().toString();
             }
         } else if (index.column() == 1){
-            return QString::number(feed->unreadCount());
+            return QString(QString::number(feed->unreadCount())+"/"+QString::number(feed->articles().size()));
         } else if (index.column() > 2) {
             qDebug() << "ERROR: trying to display more than two columns";
             return QVariant();
@@ -124,17 +124,13 @@ void FeedListModel::refreshAllFeeds() {
     }
 }
 
-void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
-    feed->remove();
-    loadFromDatabase();
-}
 
 Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
     if (!index.isValid()) {
         return 0;
     }
 
-    if (index.column() == 0) {
+    if (index.column() == 2) {
         return Qt::ItemIsEnabled  | Qt::ItemIsUserCheckable;//CheckBox
     }
     if (index.column() == 1){
@@ -144,7 +140,7 @@ Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
 }
 
 bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int role) {
-    if (index.column() == 0 && role == Qt::CheckStateRole) {
+    if (index.column() == 2 && role == Qt::CheckStateRole) {
         if (Value == Qt::Checked) {
             feeds_.at(index.row())->set_to_delete(true);
         }
@@ -170,7 +166,8 @@ void FeedListModel::deleteFeeds() {
     shared_ptr<Feed> feed;
     foreach(feed, feeds_) {
         if (feed->to_delete()){
-            deleteFeed(feed);
+            feed->remove();
+            loadFromDatabase();
         }
     }
 }
