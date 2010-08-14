@@ -8,7 +8,7 @@
 #include <QKeyEvent>
 #include <QLayout>
 #include <QTableView>
-#include <QPushButton>
+
 #include <QVBoxLayout>
 
 #include "onyx/screen/screen_proxy.h"
@@ -30,15 +30,15 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
           feed_list_model_(feed_list_model) {
     feed_list_view_->horizontalHeader()->hide();
     feed_list_view_->verticalHeader()->hide();
-    feed_list_view_->setModel(feed_list_model);
+    feed_list_view_->setModel(feed_list_model_);
     feed_list_view_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // The feeds page has a list of subscribed feeds and three
     // buttons.
-    QPushButton* add_feed_button(new QPushButton(this));
-    QPushButton* refresh_button(new QPushButton(this));
-    QPushButton* delete_feed_button(new QPushButton(this));
-    QPushButton* quit_button(new QPushButton(this));
+    ui::OnyxPushButton* add_feed_button(new ui::OnyxPushButton("",this));
+    ui::OnyxPushButton* refresh_button(new ui::OnyxPushButton("",this));
+    ui::OnyxPushButton* delete_feed_button(new ui::OnyxPushButton("",this));
+    ui::OnyxPushButton* quit_button(new ui::OnyxPushButton("",this));
 
     // Set labels and size policies.
     add_feed_button->setText(tr("Add feed"));
@@ -72,11 +72,11 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     connect(quit_button, SIGNAL(clicked()),
             qApp, SLOT(quit()));
 
-    connect(feed_list_view_, SIGNAL(activated(const QModelIndex&)),
-            this, SLOT(handleActivated(const QModelIndex&)));
     connect(feed_list_view_, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(handleActivated(const QModelIndex&)));
 
+    connect(delete_feed_button, SIGNAL(clicked()),
+            this, SLOT(deleteFeeds()));
     WidgetUpdater& updater(Singleton<WidgetUpdater>::instance());
     updater.addWidget(add_feed_button, ScreenProxy::GU);
     updater.addWidget(delete_feed_button, ScreenProxy::GU);
@@ -92,17 +92,19 @@ FeedsPage::~FeedsPage() {
 }
 
 void FeedsPage::showEvent(QShowEvent* event) {
-    int total_width = 590;
-    feed_list_view_->setColumnWidth(0, static_cast<int>(0.9 * total_width));
-    feed_list_view_->setColumnWidth(
-            1, total_width - feed_list_view_->columnWidth(0));
+    feed_list_view_->setColumnWidth(0, feed_list_view_->rowHeight(0));
+    feed_list_view_->setColumnWidth(1, feed_list_view_->rowHeight(0) * 2);
+    feed_list_view_->setColumnWidth(2, parentWidget()->width() - feed_list_view_->rowHeight(0) *3 - 30);
     QWidget::showEvent(event);
 }
 
 void FeedsPage::handleActivated(const QModelIndex& index) {
-    emit feedActivated(
-            feed_list_view_->model()->data(
-                    index, FeedListModel::FeedIdentifierRole).toInt());
+    if (index.column() == 2){
+            emit feedActivated(
+                    feed_list_view_->model()->data(
+                            index, FeedListModel::FeedIdentifierRole).toInt());
+    }
+    return;
 }
 
 void FeedsPage::showAddFeedDialog() {
@@ -115,6 +117,10 @@ void FeedsPage::showAddFeedDialog() {
 
 void FeedsPage::addFeed() {
     feed_list_model_->addFeed(add_feed_dialog_->url());
+}
+
+void FeedsPage::deleteFeeds() {
+    feed_list_model_->deleteFeeds();
 }
 
 }  // namespace feed_reader

@@ -31,18 +31,25 @@ class FeedListModel : public QAbstractTableModel {
     virtual int columnCount(
             const QModelIndex& parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
+    bool setData(const QModelIndex &index, const QVariant &Value, int role);
     void loadFromDatabase();
     shared_ptr<Feed> getFeed(int id);
 
+    Qt::ItemFlags flags(const QModelIndex &index) const;
   public slots:
     void addFeed(shared_ptr<Feed> feed);
     void addFeed(const QUrl& url);
     void refreshAllFeeds();
     void updateFeed(shared_ptr<Feed> feed);
+    void deleteFeed(shared_ptr<Feed> feed);
+    void deleteFeeds();///< call deleteFeed();
+    void insertFeedToDelete(shared_ptr<Feed>  feed);
+    void removeFeedToDelete(shared_ptr<Feed>  feed);
 
   private:
     vector<shared_ptr<Feed> > feeds_;
     scoped_ptr<FeedFetcher> feed_fetcher_;
+    QList<shared_ptr<Feed> > feeds_delete_;
     QTimer timer_;
 };
 

@@ -33,19 +33,24 @@ int FeedListModel::rowCount(const QModelIndex &parent) const {
 }
 
 int FeedListModel::columnCount(const QModelIndex& parent) const {
-    return 2;
+    return 3;
 }
 
 QVariant FeedListModel::data(const QModelIndex &index, int role) const {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return QVariant();
+    }
 
-    if (index.row() >= static_cast<int>(feeds_.size()))
+    if (index.row() >= static_cast<int>(feeds_.size())) {
         return QVariant();
+    }
 
-    if (role == Qt::DisplayRole) {
-        Feed* feed = feeds_.at(index.row()).get();
-        if (index.column() == 0) {
+    Feed* feed = feeds_.at(index.row()).get();
+
+    if (role == Qt::CheckStateRole && index.column() == 0) {
+        return feed->to_delete() ? Qt::Checked : Qt::Unchecked;
+    } else if (role == Qt::DisplayRole) {
+        if (index.column() == 2) {
             // The first column shows feed titles.
             if (!feed->title().isEmpty()) {
                 return feed->title();
@@ -54,15 +59,14 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
             }
         } else if (index.column() == 1){
             return QString::number(feed->unreadCount());
-        } else {
+        } else if (index.column() > 2 || index.column() == 0) {
             qDebug() << "ERROR: trying to display more than two columns";
             return QVariant();
         }
     } else if (role == FeedIdentifierRole){
         return feeds_.at(index.row())->id();
-    } else {
-        return QVariant();
     }
+    return QVariant();
 }
 
 shared_ptr<Feed> FeedListModel::getFeed(int id) {
@@ -115,6 +119,57 @@ void FeedListModel::refreshAllFeeds() {
     qDebug() << "Refreshing " << feeds.size() << " feeds";
     for (size_t i = 0; i < feeds.size(); ++i) {
         feed_fetcher_->scheduleFetch(feeds[i]);
+    }
+}
+
+void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
+    feed->remove();
+    loadFromDatabase();
+}
+
+Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
+    if (!index.isValid()) {
+        return 0;
+    }
+
+    if (index.column() == 0) {
+        return Qt::ItemIsEnabled  | Qt::ItemIsUserCheckable;  //CheckBox
+    }
+    if (index.column() == 1){
+        return Qt::ItemIsEnabled;
+    }
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int role) {
+    if (index.column() == 0 && role == Qt::CheckStateRole) {
+        if (Value == Qt::Checked) {
+            insertFeedToDelete(feeds_.at(index.row()));
+        }
+        else {
+            removeFeedToDelete(feeds_.at(index.row()));
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+void FeedListModel::insertFeedToDelete(shared_ptr<Feed>  feed) {
+    feeds_delete_.append(feed);
+    feed->set_to_delete(true);
+}
+
+void FeedListModel::removeFeedToDelete(shared_ptr<Feed> feed) {
+    feeds_delete_.removeOne(feed);
+    feed->set_to_delete(false);
+}
+
+void FeedListModel::deleteFeeds() {
+    shared_ptr<Feed> feed;
+    foreach(feed, feeds_delete_) {
+        deleteFeed(feed);
     }
 }
 
