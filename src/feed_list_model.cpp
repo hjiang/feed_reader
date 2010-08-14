@@ -48,9 +48,8 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
     Feed* feed = feeds_.at(index.row()).get();
 
     if (role == Qt::CheckStateRole && index.column() == 0) {
-        return feed->isToDelete() ? Qt::Checked : Qt::Unchecked;
-    }
-    else if (role == Qt::DisplayRole) {
+        return feed->to_delete() ? Qt::Checked : Qt::Unchecked;
+    } else if (role == Qt::DisplayRole) {
         if (index.column() == 2) {
             // The first column shows feed titles.
             if (!feed->title().isEmpty()) {
@@ -60,14 +59,13 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
             }
         } else if (index.column() == 1){
             return QString::number(feed->unreadCount());
-        } else if (index.column() > 2) {
+        } else if (index.column() > 2 || index.column() == 0) {
             qDebug() << "ERROR: trying to display more than two columns";
             return QVariant();
         }
     } else if (role == FeedIdentifierRole){
         return feeds_.at(index.row())->id();
     }
-
     return QVariant();
 }
 
@@ -125,7 +123,7 @@ void FeedListModel::refreshAllFeeds() {
 }
 
 void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
-    feed->removeOld();
+    feed->remove();
     loadFromDatabase();
 }
 
@@ -135,7 +133,7 @@ Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
     }
 
     if (index.column() == 0) {
-        return Qt::ItemIsEnabled  | Qt::ItemIsUserCheckable;//CheckBox
+        return Qt::ItemIsEnabled  | Qt::ItemIsUserCheckable;  //CheckBox
     }
     if (index.column() == 1){
         return Qt::ItemIsEnabled;
@@ -160,12 +158,12 @@ bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int
 
 void FeedListModel::insertFeedToDelete(shared_ptr<Feed>  feed) {
     feeds_delete_.append(feed);
-    feed->setToDelete(true);
+    feed->set_to_delete(true);
 }
 
 void FeedListModel::removeFeedToDelete(shared_ptr<Feed> feed) {
     feeds_delete_.removeOne(feed);
-    feed->setToDelete(false);
+    feed->set_to_delete(false);
 }
 
 void FeedListModel::deleteFeeds() {

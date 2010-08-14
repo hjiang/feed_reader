@@ -68,18 +68,18 @@ class Feed {
     static int count();
     static bool createTable();
 
-    const bool isToDelete() {
+    const bool to_delete() {
         return to_delete_;
     }
-    void setToDelete(const bool to_delete) {
+    void set_to_delete(const bool to_delete) {
         to_delete_ = to_delete;
     }
     // Load all feeds from the database. Return false if any error
     // occured. The contents of feeds will be cleared if the operation succeeds.
     // But if an error occured, the feeds argument is not modified.
     static bool all(vector<shared_ptr<Feed> >* feeds);
-    ///@brief remove feed;
-    bool removeOld();
+    // remove feed;
+    bool remove();
 
   private:
     void initializeFromQuery(QSqlQuery* query);

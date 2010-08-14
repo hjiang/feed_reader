@@ -38,12 +38,10 @@ class FeedsPage : public QWidget {
 
   protected:
     virtual void showEvent (QShowEvent* event);
-    // virtual void keyPressEvent(QKeyEvent* event);
   private slots:
     void showAddFeedDialog();
     void addFeed();
     void handleActivated(const QModelIndex& index);
-    void deleteFeed();
     void deleteFeeds();
 
   private:

@@ -140,7 +140,6 @@ int Feed::unreadCount() {
     shared_ptr<Database> db(Database::getShared());
     {
         QSqlQuery query;
-
         if(!query.prepare("select count(id) from articles "
                              "where feed_id=:feed_id and "
                           "is_read='false'")) {
@@ -208,7 +207,7 @@ int Feed::count() {
     }
 }
 
-bool Feed::removeOld() {
+bool Feed::remove() {
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
     qDebug() << "feed :preparing, feed_id is " + id_;
