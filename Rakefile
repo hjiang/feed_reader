@@ -36,6 +36,11 @@ end
 directory "build/arm"
 directory "build/x86"
 
+desc "Update submodules from repository"
+task :update do
+  sh "git submodule update --init --recursive"
+end
+
 namespace :config do
   task :env do
     path = ENV['PATH']
