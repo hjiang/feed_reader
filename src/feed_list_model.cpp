@@ -124,7 +124,6 @@ void FeedListModel::refreshAllFeeds() {
 
 void FeedListModel::deleteFeed(shared_ptr<Feed> feed) {
     feed->remove();
-    loadFromDatabase();
 }
 
 Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
@@ -157,20 +156,20 @@ bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int
 }
 
 void FeedListModel::insertFeedToDelete(shared_ptr<Feed>  feed) {
-    feeds_delete_.append(feed);
     feed->set_to_delete(true);
 }
 
 void FeedListModel::removeFeedToDelete(shared_ptr<Feed> feed) {
-    feeds_delete_.removeOne(feed);
     feed->set_to_delete(false);
 }
 
 void FeedListModel::deleteFeeds() {
     shared_ptr<Feed> feed;
-    foreach(feed, feeds_delete_) {
+    foreach(feed, feeds_) {
+        if (feed->to_delete())
         deleteFeed(feed);
     }
+    loadFromDatabase();
 }
 
 }  // namespace feed_reader
