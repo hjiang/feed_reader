@@ -85,6 +85,11 @@ void FeedFetcher::readData(const QHttpResponseHeader& response_header) {
             qDebug() << "Error parsing feed: "
                      << impl_->parser_->errorString();
         }
+    } else if ((response_header.statusCode() >300 || response_header.statusCode() <300) && response_header.hasKey("location")) {
+        qDebug()<<response_header.statusCode();
+        QUrl location = QUrl(response_header.value("location"));
+        impl_->http_.get()->setHost(location.host(),80);
+        impl_->http_.get()->get(location.path());
     } else {
         qDebug() << "Received non-200 response code: "
                  << response_header.statusCode();
