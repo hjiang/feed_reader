@@ -48,7 +48,9 @@ ELSE (WIN32)
 ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE_UNIX)
 ENDIF (WIN32)
 
+add_subdirectory(images)
 add_subdirectory(src)
+
 if(NOT BUILD_FOR_ARM)
 add_subdirectory(tests)
 endif(NOT BUILD_FOR_ARM)

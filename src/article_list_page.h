@@ -11,7 +11,7 @@
 #include "article.h"
 
 class QAbstractItemModel;
-class QListView;
+class QTableView;
 class QModelIndex;
 
 namespace onyx {
@@ -26,6 +26,9 @@ class ArticleListPage : public QWidget {
                     QWidget* parent = NULL);
     virtual ~ArticleListPage();
 
+
+  protected:
+    void showEvent(QShowEvent* event);
   signals:
     void articleActivated(shared_ptr<Article> article);
 
@@ -33,7 +36,7 @@ class ArticleListPage : public QWidget {
     void handleActivated(const QModelIndex& index);
 
   private:
-    QListView* article_list_view_;
+    QTableView* article_list_view_;
 
     NO_COPY_AND_ASSIGN(ArticleListPage);
 };

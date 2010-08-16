@@ -28,9 +28,13 @@ add_library(onyx_feed_reader_lib
   util.cpp
   ${MOC_SRCS}
 )
-target_link_libraries(onyx_feed_reader_lib  ${QT_LIBRARIES} ${ONYX_LIBS})
+
+SET(feedreader_RCCS ../feedreader.qrc)
+
+QT4_ADD_RESOURCES(feedreadqrc ${feedreader_RCCS})
+target_link_libraries(onyx_feed_reader_lib  ${QT_LIBRARIES} ${ONYX_LIBS} ${feedreader})
 strict_warning(onyx_feed_reader_lib)
 
-add_executable(onyx_feed_reader feed_reader.cpp)
+add_executable(onyx_feed_reader feed_reader.cpp ${feedreader})
 target_link_libraries(onyx_feed_reader  onyx_feed_reader_lib ${QT_LIBRARIES})
 strict_warning(onyx_feed_reader)
