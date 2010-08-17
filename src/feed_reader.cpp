@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QApplication::setFont(QFont("Sans Serif", 20));
     InitArgs args;
-    args.db_path = QDir::homePath() + "/.onyx_feed_reader.db";
+    args.db_path = "/media/flash/.onyx_feed_reader.db";
     scoped_ptr<MainWidget> mw(init(args));
     return app.exec();
 }
