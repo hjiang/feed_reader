@@ -168,6 +168,7 @@ void FeedListModel::deleteFeeds() {
             loadFromDatabase();
         }
     }
+    loadFromDatabase();
 }
 
 }  // namespace feed_reader
