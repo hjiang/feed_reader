@@ -6,11 +6,10 @@
 #include <QDialog>
 #include <QUrl>
 
-class QLineEdit;
-class QPushButton;
-
 namespace ui {
 class KeyBoard;
+class OnyxPushButton;
+class OnyxLineEdit;
 }
 
 namespace onyx {
@@ -33,9 +32,9 @@ class AddFeedDialog : public QDialog
     friend class AcceptanceTest;
 
     ui::KeyBoard* key_board_;
-    QPushButton *add_button_;
-    QPushButton *cancel_button_;
-    QLineEdit *url_edit_;
+    ui::OnyxPushButton *add_button_;
+    ui::OnyxPushButton *cancel_button_;
+    ui::OnyxLineEdit *url_edit_;
     QUrl url_;
 };
 

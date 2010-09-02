@@ -19,8 +19,126 @@
 #include "singleton.h"
 #include "widget_updater.h"
 
+
 namespace onyx {
 namespace feed_reader {
+namespace {
+static const QString STYLE ="\
+QTabBar::tab\
+        {\
+        background: white;  \
+        font-size: 24px;    \
+        border: 2px solid gray;\
+        border-top-left-radius: 4px;    \
+        border-top-right-radius: 4px;   \
+        padding: 2px;       \
+        border-bottom-color: black; \
+        min-height: 32px;   \
+        min-width: 32px     \
+        }\
+QTabBar::tab:hover \
+        {\
+        background: white;  \
+        font-size: 24px;    \
+        border: 2px solid gray;\
+        border-top-left-radius: 4px;    \
+        border-top-right-radius: 4px;   \
+        padding: 2px;       \
+        border-bottom-color: gray; \
+        border-top-color: black;    \
+        min-height: 32px;   \
+        min-width: 32px     \
+        }\
+QTabBar::tab:selected\
+           {\
+               border-color: black;  \
+               border-bottom-color: white;  \
+               top: 6px;\
+           }\
+QTabBar::tab:first:selected\
+           {\
+            margin-left: 0; \
+           }\
+QTabBar::tab:last:selected\
+           {\
+            margin-right: 0;    \
+           }\
+QTabBar::tab:only-one {\
+            margin: 0;  \
+          }\
+QWidget                                       \
+           {                                  \
+            background: white;                \
+            font-size: 24px;                  \
+            border-style: solid;              \
+            padding: 0px;                     \
+           }\
+QWidget:focus                                 \
+           {                                  \
+            background: white;                \
+            font-size: 24px;                  \
+            border-style: solid;              \
+            padding: 0px;                     \
+           }\
+QWidget:disabled                              \
+           {                                  \
+            background: white;                \
+            font-size: 24px;                  \
+            border-style: solid;              \
+            padding: 0px;                     \
+           }\
+QTabWidget                                    \
+           {                                  \
+            border-width: 1px;\
+            border-color: black;    \
+            background: white;                \
+            font-size: 24px;                  \
+            border-style: solid;              \
+            padding: 0px;                     \
+            min-height: 32px;                 \
+           }\
+QTabWidget:tab-bar                            \
+           {                                  \
+             alignment: center;                \
+           }\
+QTabWidget::pane                               \
+           {                                  \
+               border-top: 1px solid black;    \
+           }";
+
+
+class TabBar : public QTabBar {
+    public:
+        TabBar(QWidget *parent = 0);
+    protected:
+         void mouseMoveEvent(QMouseEvent *event) {
+         //do nothing here
+         }
+};
+
+TabBar::TabBar(QWidget *parent)
+        : QTabBar(parent) {
+     setFocusPolicy(Qt::TabFocus);
+     //setStyleSheet(STYLE);
+        }
+
+
+class  TabWidget : public  QTabWidget{
+    public:
+        TabWidget(QWidget* parent = 0);
+    protected:
+        void mouseMoveEvent(QMouseEvent *event) {
+            //do nothing here
+        }
+};
+
+TabWidget::TabWidget(QWidget* parent)
+        : QTabWidget(parent) {
+        clear();
+        setTabBar(new TabBar(this));
+        setStyleSheet(STYLE);
+        }
+}
 
 MainWidget::MainWidget(QWidget* parent)
         : QWidget(parent, Qt::FramelessWindowHint),
@@ -29,7 +147,7 @@ MainWidget::MainWidget(QWidget* parent)
           article_list_model_(new ArticleListModel(this)),
           // Just parent all widgets to this for now. They will be
           // reparented by the layout anyway.
-          tab_widget_(new QTabWidget(this)),
+          tab_widget_(new TabWidget(this)),
           feeds_page_(new FeedsPage(feed_list_model_, this)),
           article_list_page_(new ArticleListPage(article_list_model_, this)),
           article_page_(new ArticlePage(this)) {
