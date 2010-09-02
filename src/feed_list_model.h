@@ -41,15 +41,13 @@ class FeedListModel : public QAbstractTableModel {
     void addFeed(const QUrl& url);
     void refreshAllFeeds();
     void updateFeed(shared_ptr<Feed> feed);
-    void deleteFeed(shared_ptr<Feed> feed);
-    void deleteFeeds();///< call deleteFeed();
+    void deleteFeeds();
     void insertFeedToDelete(shared_ptr<Feed>  feed);
     void removeFeedToDelete(shared_ptr<Feed>  feed);
 
   private:
     vector<shared_ptr<Feed> > feeds_;
     scoped_ptr<FeedFetcher> feed_fetcher_;
-    QList<shared_ptr<Feed> > feeds_delete_;
     QTimer timer_;
 };
 

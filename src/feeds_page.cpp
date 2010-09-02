@@ -72,6 +72,8 @@ FeedsPage::FeedsPage(FeedListModel* feed_list_model, QWidget* parent)
     connect(quit_button, SIGNAL(clicked()),
             qApp, SLOT(quit()));
 
+    connect(feed_list_view_, SIGNAL(activated(QModelIndex)),
+            this, SLOT(handleActivated(const QModelIndex&)));
     connect(feed_list_view_, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(handleActivated(const QModelIndex&)));
 
@@ -92,17 +94,18 @@ FeedsPage::~FeedsPage() {
 }
 
 void FeedsPage::showEvent(QShowEvent* event) {
-    feed_list_view_->setColumnWidth(0, feed_list_view_->rowHeight(0));
+    feed_list_view_->setColumnWidth(2, feed_list_view_->rowHeight(0));
     feed_list_view_->setColumnWidth(1, feed_list_view_->rowHeight(0) * 2);
+    feed_list_view_->setWordWrap(true);
     feed_list_view_->setColumnWidth(2, parentWidget()->width() - feed_list_view_->rowHeight(0) *3 - 30);
     QWidget::showEvent(event);
 }
 
 void FeedsPage::handleActivated(const QModelIndex& index) {
-    if (index.column() == 2){
-            emit feedActivated(
-                    feed_list_view_->model()->data(
-                            index, FeedListModel::FeedIdentifierRole).toInt());
+    if (index.column() == 0){
+    emit feedActivated(
+            feed_list_view_->model()->data(
+                    index, FeedListModel::FeedIdentifierRole).toInt());
     }
     return;
 }

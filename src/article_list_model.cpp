@@ -4,6 +4,7 @@
 
 #include <QDebug>
 #include <QFont>
+#include <QIcon>
 
 #include "article.h"
 
@@ -11,7 +12,7 @@ namespace onyx {
 namespace feed_reader {
 
 ArticleListModel::ArticleListModel(QObject* parent)
-        : QAbstractListModel(parent) {
+        : QAbstractTableModel(parent) {
 }
 
 ArticleListModel::~ArticleListModel() {
@@ -28,27 +29,71 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
     if (index.row() >= static_cast<int>(articles_.size()))
         return QVariant();
 
-    if (role == Qt::DisplayRole) {
-        return articles_.at(index.row())->title();
-    } else if (role == ArticleIdentifierRole) {
-        return articles_.at(index.row())->url();
-    } else if (role == ArticleDisplayRole) {
-        return QVariant::fromValue(articles_.at(index.row()));
-    } else if (role == Qt::FontRole) {
-        if (articles_.at(index.row())->read()) {
-            return QVariant::fromValue(QFont("Serif", 16));
+    shared_ptr<Article> article = articles_.at(index.row());
+     if (index.column() == 0 &&/* role == Qt::DecorationRole */ role == Qt::CheckStateRole) {
+        if (article->read()) {
+       //     return  QIcon(":/images/mail-mark-read.png");
+       return Qt::Checked;
         } else {
-            return QVariant::fromValue(QFont("Serif", 16, QFont::Bold));
+       //     return  QIcon(":/images/mail-mark-unread-new.png");
+       return Qt::Unchecked;
         }
-    } else {
-        return QVariant();
     }
+
+    if (index.column() == 1) {
+        if (role == Qt::DisplayRole) {
+            return article->title();
+        } else if (role == ArticleIdentifierRole) {
+            return article->url();
+        } else if (role == ArticleDisplayRole) {
+            return QVariant::fromValue(article);
+        } else if (role == Qt::FontRole) {
+            if (articles_.at(index.row())->read()) {
+                return QVariant::fromValue(QFont("Serif", 16));
+            } else {
+                return QVariant::fromValue(QFont("Serif", 16, QFont::Bold));
+            }
+        }
+    }
+    return QVariant();
+}
+
+
+bool ArticleListModel::setData(const QModelIndex& index, const QVariant& Value, int role)
+{
+    if (index.column() == 0 && /*role == Qt::DecorationRole*/ role == Qt::CheckStateRole) {
+        if (Value ==/* QIcon(":/images/mail-mark-read.png"*/ Qt::Checked) {
+            articles_.at(index.row())->set_read(true);
+            articles_.at(index.row())->saveOrUpdate();
+        }
+        else {
+            articles_.at(index.row())->set_read(false);
+            articles_.at(index.row())->saveOrUpdate();
+        }
+
+        return true;
+    }
+
+return false;
 }
 
 void ArticleListModel::switchToFeed(shared_ptr<Feed> feed) {
     Article::loadByFeed(feed, &articles_);
     reset();
 }
+
+Qt::ItemFlags ArticleListModel::flags(const QModelIndex& index) const {
+    if (!index.isValid()) {
+        return 0;
+    }
+
+    if (index.column() == 0) {
+        return Qt::ItemIsEnabled | Qt::ItemIsUserCheckable;  //CheckBox
+    }
+
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
 
 }  // namespace feed_reader
 }  // namespace onyx
