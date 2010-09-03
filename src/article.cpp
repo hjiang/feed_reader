@@ -83,6 +83,12 @@ void Article::set_title(const QString& title) {
     title_.remove(QRegExp("<.*>"));
 }
 
+void Article::set_pubdate(const QString& pubdate)
+{
+    pubdate_ = pubdate;
+}
+
+
 bool Article::saveOrUpdate() {
     qDebug() << "Saving or updating article";
     createTableIfNeeded();

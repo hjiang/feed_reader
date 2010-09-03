@@ -27,6 +27,7 @@ ArticleListPage::ArticleListPage(QAbstractItemModel* article_list_model,
     article_list_view_->horizontalHeader()->hide();
     article_list_view_->verticalHeader()->hide();
     article_list_view_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    article_list_view_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     article_list_view_->setWordWrap(true);
     article_list_view_->sortByColumn(2,Qt::DescendingOrder);
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -50,7 +51,7 @@ void ArticleListPage::handleActivated(const QModelIndex& index) {
                                          index,
                                          ArticleListModel::ArticleDisplayRole)
                                  .value<shared_ptr<Article> >());
-    if (index.column()==1){
+    if (index.column() == 1) {
         article->set_read(true);
         article->saveOrUpdate();
         emit articleActivated(article);
@@ -59,9 +60,8 @@ void ArticleListPage::handleActivated(const QModelIndex& index) {
 }
 
 void ArticleListPage::showEvent(QShowEvent* event) {
-    article_list_view_->setColumnWidth(0, 32);
-    article_list_view_->setColumnWidth(2, 96);
-    article_list_view_->setColumnWidth(1, parentWidget()->width() - 128);
+    article_list_view_->setColumnWidth(0, 120);
+    article_list_view_->setColumnWidth(1, width() - 135);
     QWidget::showEvent(event);
 }
 

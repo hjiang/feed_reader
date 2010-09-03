@@ -59,7 +59,7 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
                 return feed->feed_url().toString();
             }
         } else if (index.column() == 1){
-            return QString(QString::number(feed->unreadCount())+"/"+QString::number(feed->articles().size()));
+            return QString::number(feed->unreadCount());
         } else if (index.column() > 2) {
             qDebug() << "ERROR: trying to display more than two columns";
             return QVariant();

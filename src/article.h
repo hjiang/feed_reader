@@ -39,7 +39,7 @@ class Article {
     void set_url(const QString& url) { url_ = url; }
     void set_text(const QString& text) { text_ = text; }
     void set_read(bool read) { read_ = read; }
-    void set_pubdate(const QString& pubdate) {pubdate_ = pubdate;}
+    void set_pubdate(const QString& pubdate);
     bool saveOrUpdate();
 
   private:
