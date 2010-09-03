@@ -32,9 +32,11 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
     shared_ptr<Article> article = articles_.at(index.row());
      if (index.column() == 0 && role == Qt::DecorationRole ) {
         if (article->read()) {
-            return  QIcon(":/images/mail-mark-read.png");
+            QIcon icon = QIcon(":/read.png");
+            return icon;
         } else {
-            return  QIcon(":/images/mail-mark-unread-new.png");
+            QIcon icon = QIcon(":/unread.png");
+            return icon;
         }
     }
 
@@ -47,9 +49,21 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
             return QVariant::fromValue(article);
         } else if (role == Qt::FontRole) {
             if (articles_.at(index.row())->read()) {
-                return QVariant::fromValue(QFont("Serif", 16));
+                return QVariant::fromValue(QFont("Serif", 14));
             } else {
-                return QVariant::fromValue(QFont("Serif", 16, QFont::Bold));
+                return QVariant::fromValue(QFont("Serif", 14, QFont::Bold));
+            }
+        }
+    }
+
+    if (index.column() == 2) {
+        if (role == Qt::DisplayRole) {
+            return article->pubdate();
+        } else if (role == Qt::FontRole) {
+            if (articles_.at(index.row())->read()) {
+                return QVariant::fromValue(QFont("Serif", 10));
+            } else {
+                return QVariant::fromValue(QFont("Serif", 10, QFont::Bold));
             }
         }
     }
@@ -59,7 +73,7 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
 
 bool ArticleListModel::setData(const QModelIndex& index, const QVariant& Value, int role)
 {
-    if (index.column() == 0 && role == Qt::ItemIsUserCheckable  ) {
+    if (index.column() == 0 && role == Qt::ItemIsUserCheckable ) {
         qDebug()<<"setData";
         if (Value == QIcon(":/images/mail-mark-read.png")) {
             articles_.at(index.row())->set_read(true);

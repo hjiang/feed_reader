@@ -50,6 +50,7 @@ ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE_UNIX)
 ENDIF (WIN32)
 
 add_subdirectory(src)
+add_subdirectory(images)
 set(feedreader_RCS feedreader.qrc)
 if(NOT BUILD_FOR_ARM)
 add_subdirectory(tests)
