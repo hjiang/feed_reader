@@ -41,7 +41,6 @@ bool Feed::all(vector<shared_ptr<Feed> >* feeds) {
     feeds->clear();
 
     while (query.next()) {
-        qDebug() << "Reading a feed record.";
         shared_ptr<Feed> feed(new Feed);
         feed->initializeFromQuery(&query);
         feeds->push_back(feed);
@@ -94,7 +93,6 @@ bool Feed::saveNew() {
     query.addBindValue(title_);
     query.addBindValue(site_url_.toString());
     query.addBindValue(feed_url_.toString());
-    qDebug() << "Saving new feed.";
     if (!query.exec()) {
         ReportDatabaseError(query, "Error saving new feeds");
         return false;
@@ -110,7 +108,6 @@ bool Feed::saveNew() {
     } else {
         return false;
     }
-    qDebug() << "Saved new feed.";
     return true;
 }
 
@@ -210,7 +207,6 @@ int Feed::count() {
 bool Feed::remove() {
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
-    qDebug() << "feed :preparing, feed_id is " + id_;
 
     //delete articles
     if (!query.prepare("DELETE FROM articles WHERE feed_id=:feed_id")) {
@@ -231,7 +227,6 @@ bool Feed::remove() {
     }
 
     query.addBindValue(id_);
-    qDebug() << "deleting an old feed.";
 
     if (!query.exec()) {
         ReportDatabaseError(query, "Error deleting  feeds");

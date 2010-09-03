@@ -90,7 +90,6 @@ void Article::set_pubdate(const QString& pubdate)
 
 
 bool Article::saveOrUpdate() {
-    qDebug() << "Saving or updating article";
     createTableIfNeeded();
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;

@@ -77,14 +77,13 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
 bool ArticleListModel::setData(const QModelIndex& index, const QVariant& Value, int role)
 {
     if (index.column() == 0 && role == Qt::CheckStateRole) {
-        qDebug()<<__LINE__;
         if (Value == Qt::Checked) {
             articles_.at(index.row())->set_read(true);
-             qDebug()<<__LINE__;
         } else {
             articles_.at(index.row())->set_read(false);
-             qDebug()<<__LINE__;
         }
+        // modify database
+        articles_.at(index.row())->saveOrUpdate();
         return true;
     }
     return false;
