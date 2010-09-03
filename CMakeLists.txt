@@ -39,7 +39,7 @@ else(BUILD_FOR_ARM)
   LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sdk/lib/x86)
 endif(BUILD_FOR_ARM)
 
-set(ONYX_LIBS onyx_sys onyx_ui onyx_wifi onyx_wpa onyx_screen onyx_data
+set(ONYX_LIBS onyx_sys onyx_ui onyx_wireless onyx_wpa onyx_screen onyx_data
   onyx_cms)
 ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE)
 IF (WIN32)
