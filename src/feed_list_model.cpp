@@ -47,11 +47,11 @@ QVariant FeedListModel::data(const QModelIndex &index, int role) const {
 
     Feed* feed = feeds_.at(index.row()).get();
 
-    if (role == Qt::CheckStateRole && index.column() == 3) {
+    if (role == Qt::CheckStateRole && index.column() == 0) {
         return feed->to_delete() ? Qt::Checked : Qt::Unchecked;
     }
     else if (role == Qt::DisplayRole) {
-        if (index.column() == 0) {
+        if (index.column() == 2) {
             // The first column shows feed titles.
             if (!feed->title().isEmpty()) {
                 return feed->title();
@@ -128,17 +128,17 @@ Qt::ItemFlags FeedListModel::flags(const QModelIndex& index) const {
         return 0;
     }
 
-    if (index.column() == 2) {
+    if (index.column() == 0) {
         return Qt::ItemIsEnabled  | Qt::ItemIsUserCheckable;//CheckBox
     }
-    if (index.column() == 1){
+    if (index.column() == 2){
         return Qt::ItemIsEnabled;
     }
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 bool FeedListModel::setData(const QModelIndex &index, const QVariant &Value, int role) {
-    if (index.column() == 2 && role == Qt::CheckStateRole) {
+    if (index.column() == 0 && role == Qt::CheckStateRole) {
         if (Value == Qt::Checked) {
             feeds_.at(index.row())->set_to_delete(true);
         }

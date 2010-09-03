@@ -39,6 +39,7 @@ class RssFeedParser : public FeedParser {
     std::stack<shared_ptr<QString> > tag_stack_;
     shared_ptr<Article> current_article_;
     QString current_text_;  // Text content of the current element.
+    QString pudate_;
     vector<shared_ptr<Article> > new_articles_;
 
     NO_COPY_AND_ASSIGN(RssFeedParser);

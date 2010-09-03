@@ -25,7 +25,7 @@ bool Article::createTableIfNeeded() {
     QSqlQuery query;
     return query.exec("CREATE TABLE IF NOT EXISTS articles"
                       "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                      " title, url UNIQUE NOT NULL, text,"
+                      " title, pubdate, url UNIQUE NOT NULL, text,"
                       " feed_id NOT NULL, is_read);");
 }
 
@@ -44,9 +44,11 @@ bool Article::loadByFeed(shared_ptr<Feed> feed,
     qDebug() << query.size() << " articles loaded from database.";
     articles->clear();
     while (query.next()) {
-        // FIXME: Ony need feed_id
+        // FIXME: Only need feed_id
         shared_ptr<Article> article(new Article(feed));
         article->set_title(query.value(query.record().indexOf("title"))
+                           .toString());
+        article->set_pubdate(query.value(query.record().indexOf("pubdate"))
                            .toString());
         article->set_url(query.value(query.record().indexOf("url"))
                          .toString());
@@ -86,10 +88,11 @@ bool Article::saveOrUpdate() {
     createTableIfNeeded();
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query;
-    query.prepare("INSERT OR REPLACE INTO articles (title, url, text, feed_id, "
+    query.prepare("INSERT OR REPLACE INTO articles (title, pubdate, url, text, feed_id, "
                   "is_read)"
-                  " VALUES (:title, :url, :text, :feed_id, :is_read)");
+                  " VALUES (:title, :pubdate, :url, :text, :feed_id, :is_read)");
     query.addBindValue(title_);
+    query.addBindValue(pubdate_);
     query.addBindValue(url_);
     query.addBindValue(text_);
     query.addBindValue(feed_->id());

@@ -39,7 +39,7 @@ else(BUILD_FOR_ARM)
   LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sdk/lib/x86)
 endif(BUILD_FOR_ARM)
 
-set(ONYX_LIBS onyx_sys onyx_ui onyx_wireless onyx_wpa onyx_screen onyx_data
+set(ONYX_LIBS onyx_sys onyx_ui onyx_wifi onyx_wpa onyx_screen onyx_data
   onyx_cms)
 ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE)
 IF (WIN32)
@@ -50,7 +50,7 @@ ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE_UNIX)
 ENDIF (WIN32)
 
 add_subdirectory(src)
-
+set(feedreader_RCS feedreader.qrc)
 if(NOT BUILD_FOR_ARM)
 add_subdirectory(tests)
 endif(NOT BUILD_FOR_ARM)

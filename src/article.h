@@ -28,6 +28,7 @@ class Article {
     const QString& title() const {return title_; };
     const QString& url() const { return url_; }
     const QString& text() const { return text_; }
+    const QString& pubdate() const {return pubdate_;}
     bool read() const { return read_; }
 
     // This article exists in the database and is marked as "is read".
@@ -38,6 +39,7 @@ class Article {
     void set_url(const QString& url) { url_ = url; }
     void set_text(const QString& text) { text_ = text; }
     void set_read(bool read) { read_ = read; }
+    void set_pubdate(const QString& pubdate) {pubdate_ = pubdate;}
     bool saveOrUpdate();
 
   private:
@@ -45,6 +47,7 @@ class Article {
     QString title_;
     QString url_;
     QString text_;
+    QString pubdate_;
     int id_;
     bool read_;
     NO_COPY_AND_ASSIGN(Article);

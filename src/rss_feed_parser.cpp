@@ -16,7 +16,8 @@ RssFeedParser::RssFeedParser()
           feed_(),
           xml_reader_(),
           current_article_(),
-          current_text_() {
+          current_text_(),
+          pudate_() {
 }
 
 RssFeedParser::~RssFeedParser() {
@@ -25,6 +26,7 @@ RssFeedParser::~RssFeedParser() {
 void RssFeedParser::startNewFeedInternal(shared_ptr<Feed> feed) {
     feed_ = feed;
     current_text_.clear();
+    pudate_.clear();
     xml_reader_.clear();
     current_article_.reset();
     qDebug() << "Starting new feed:" << feed->feed_url();
@@ -65,6 +67,33 @@ bool is_new_article(const Article& article,
 }
 }
 
+// TODO can we probe the header and check out of which type the feed is, rss 2.0, rdf, or atom
+/** give a varible to store type like QString feed_type_
+    do switch in handleStartElement with feed_type_ specified
+    and then as well as handleEndElement;
+        Comparison of the RSS and Atom tags
+                  Atom  RSS 2.0           RSS 1.0
+Channel
+   Container      feed     channel        channel
+   Title          title    title          title
+   URL            link     link           link
+   Summary        subtitle description    description
+   Date           updated  lastBuildDate  dc:date
+   Logo           icon     image          image
+   Author         author   managingEditor  -
+Item
+   Container      entry    item           item
+   Title          title    title          title
+   URL            link     link           link
+   Description    summary  description    description
+   Date           updated  pubDate        dc:date
+   Image          logo     -              image
+Image
+   Container      Logo     image          image
+   Title                   title          title
+   Article URL             link           link
+   URL image file          url            url
+*/
 void RssFeedParser::handleStartElement() {
     shared_ptr<QString> name(
             new QString(xml_reader_.name().toString()));
@@ -110,6 +139,15 @@ void RssFeedParser::handleEndElement() {
             current_article_.get() &&
             current_article_->text().isEmpty()) {
             current_article_->set_text(current_text_);
+        }
+    } else if (xml_reader_.name() == "pubDate"
+                || xml_reader_.name() == "updated"
+                || xml_reader_.name() == "dc:date") {
+        if (tag_stack_.size() &&
+            (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
+            current_article_.get() &&
+            current_article_->pubdate().isEmpty()) {
+            current_article_->set_pubdate(current_text_);
         }
     } else if (xml_reader_.name() == "content" ||
                xml_reader_.namespaceUri() ==

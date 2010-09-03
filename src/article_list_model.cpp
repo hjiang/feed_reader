@@ -30,13 +30,11 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     shared_ptr<Article> article = articles_.at(index.row());
-     if (index.column() == 0 &&/* role == Qt::DecorationRole */ role == Qt::CheckStateRole) {
+     if (index.column() == 0 && role == Qt::DecorationRole ) {
         if (article->read()) {
-       //     return  QIcon(":/images/mail-mark-read.png");
-       return Qt::Checked;
+            return  QIcon(":/images/mail-mark-read.png");
         } else {
-       //     return  QIcon(":/images/mail-mark-unread-new.png");
-       return Qt::Unchecked;
+            return  QIcon(":/images/mail-mark-unread-new.png");
         }
     }
 
@@ -61,8 +59,9 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
 
 bool ArticleListModel::setData(const QModelIndex& index, const QVariant& Value, int role)
 {
-    if (index.column() == 0 && /*role == Qt::DecorationRole*/ role == Qt::CheckStateRole) {
-        if (Value ==/* QIcon(":/images/mail-mark-read.png"*/ Qt::Checked) {
+    if (index.column() == 0 && role == Qt::ItemIsUserCheckable  ) {
+        qDebug()<<"setData";
+        if (Value == QIcon(":/images/mail-mark-read.png")) {
             articles_.at(index.row())->set_read(true);
             articles_.at(index.row())->saveOrUpdate();
         }
