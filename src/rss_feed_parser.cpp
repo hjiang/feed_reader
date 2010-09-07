@@ -142,7 +142,7 @@ void RssFeedParser::handleEndElement() {
         }
     } else if (xml_reader_.name() == "pubDate"
                 || xml_reader_.name() == "updated"
-                || xml_reader_.name() == "dc:date") {
+                || xml_reader_.name() == "date") {
         if (tag_stack_.size() &&
             (*(tag_stack_.top()) == "item" || *(tag_stack_.top()) == "entry") &&
             current_article_.get() &&
