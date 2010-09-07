@@ -60,8 +60,8 @@ void ArticleListPage::handleActivated(const QModelIndex& index) {
 }
 
 void ArticleListPage::showEvent(QShowEvent* event) {
-    article_list_view_->setColumnWidth(0, 120);
-    article_list_view_->setColumnWidth(1, width() - 135);
+    article_list_view_->setColumnWidth(0, 220);
+    article_list_view_->setColumnWidth(1, width() - 235);
     QWidget::showEvent(event);
 }
 

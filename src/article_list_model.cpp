@@ -67,8 +67,8 @@ QVariant ArticleListModel::data(const QModelIndex &index, int role) const {
             }
             return QColor(0, 0, 0);
         } else if (role == Qt::CheckStateRole) {
-        return article->read() ? Qt::Checked : Qt::Unchecked;
-    }
+            return article->read() ? Qt::Checked : Qt::Unchecked;
+        }
     }
     return QVariant();
 }

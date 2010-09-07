@@ -17,7 +17,7 @@ RssFeedParser::RssFeedParser()
           xml_reader_(),
           current_article_(),
           current_text_(),
-          pudate_() {
+          pudate_("") {
 }
 
 RssFeedParser::~RssFeedParser() {
