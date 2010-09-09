@@ -70,6 +70,7 @@ TEST_F(ArticleTest, Update) {
     article.set_url("http://someurl");
     article.set_title("test title");
     article.set_text("test text");
+    article.set_pubdate("2009-11-05T19:57:00+00:00");
     EXPECT_TRUE(article.saveOrUpdate());
     article.set_title("blah");
     EXPECT_TRUE(article.saveOrUpdate());

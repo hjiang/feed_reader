@@ -122,10 +122,11 @@ void FeedFetcher::finishFetch(int connection_id, bool error) {
         }
         impl_->pending_feeds_.pop();
         impl_->current_feed_.reset();
-        startFetch();
         if (has_error) {
             emit networkError();
+            return;
         }
+        startFetch();
     }
 }
 

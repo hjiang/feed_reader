@@ -32,6 +32,7 @@ bool Article::createTableIfNeeded() {
 // static
 bool Article::loadByFeed(shared_ptr<Feed> feed,
                          vector<shared_ptr<Article> >* articles) {
+    createTableIfNeeded();
     qDebug() << "Loading articles for feed: " << feed->feed_url();
     shared_ptr<Database> db(Database::getShared());
     QSqlQuery query("SELECT * FROM articles WHERE feed_id = :feed_id "
