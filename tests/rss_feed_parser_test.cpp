@@ -82,5 +82,16 @@ TEST_F(FeedParserTest, ParseWordPressArticles) {
     EXPECT_EQ(static_cast<size_t>(10), parser_.feed()->articles().size());
 }
 
+TEST_F(FeedParserTest, ParseWordPressPubdate) {
+    QFile rss(TEST_DATA_DIR "/slashdot.rss");
+    ASSERT_TRUE(rss.exists());
+    rss.open(QIODevice::ReadOnly);
+    parser_.startNewFeed(feed_);
+    while (rss.bytesAvailable() > 0) {
+        parser_.append(rss.read(CHUNK_SIZE));
+    }
+    EXPECT_TRUE(parser_.finished());
+    EXPECT_EQ("2009-11-05T23:24:00+00:00", parser_.feed()->articles().at(0)->pubdate());
+}
 }  // namespace feed_reader
 }  // namespace onyx
