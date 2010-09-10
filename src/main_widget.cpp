@@ -154,7 +154,6 @@ MainWidget::MainWidget(QWidget* parent)
     using onyx::screen::ScreenProxy;
     setAutoFillBackground(true);
     setBackgroundRole(QPalette::Base);
-    feed_list_model_->loadFromDatabase();
     QLayout* layout = new QVBoxLayout(this);
     layout->setSpacing(0);
     layout->setContentsMargins(1, 0, 1, 0);
@@ -177,7 +176,7 @@ MainWidget::MainWidget(QWidget* parent)
     connect(tab_widget_, SIGNAL(currentChanged(int)),
             this, SLOT(updateTab(int)));
     // refresh feeds in 3 seconds at start
-    QTimer::singleShot(3000,feed_list_model_,SLOT(refreshAllFeeds()));
+    feed_list_model_->loadFromDatabase();
     WidgetUpdater& updater(Singleton<WidgetUpdater>::instance());
     updater.addWidget(this, ScreenProxy::GU);
     updater.addWidget(tab_widget_, ScreenProxy::GU);
