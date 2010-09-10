@@ -15,9 +15,7 @@ include(onyx_test)
 include(strict_warning)
 include(tc)
 
-find_package(Qt4 4.5.2 COMPONENTS QtCore QtGui QtXml QtSql QtWebKit QtNetwork
-  QtTest QtDBus REQUIRED)
-include(${QT_USE_FILE})
+enable_qt()
 
 include_directories(BEFORE
   ${CMAKE_SOURCE_DIR}/sdk/include
@@ -50,7 +48,6 @@ ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE_UNIX)
 ENDIF (WIN32)
 
 add_subdirectory(src)
-add_subdirectory(images)
 set(feedreader_RCS feedreader.qrc)
 if(NOT BUILD_FOR_ARM)
 add_subdirectory(tests)
