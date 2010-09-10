@@ -18,7 +18,7 @@ include(tc)
 enable_qt()
 
 include_directories(BEFORE
-  ${CMAKE_SOURCE_DIR}/sdk/include
+  ${CMAKE_SOURCE_DIR}/sdk/code/include
   ${CMAKE_SOURCE_DIR}/third_party/gtest/include
   ${CMAKE_SOURCE_DIR}/third_party/gmock/include
 )
@@ -28,14 +28,19 @@ if(BUILD_FOR_ARM)
   use_arm_toolchain()
   # Maximize window.
   add_definitions(-DSCREEN_WIDTH=-1 -DSCREEN_HEIGHT=-1 -DBUILD_FOR_ARM)
-  LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sdk/lib/arm)
 else(BUILD_FOR_ARM)
 
   # Use 600x800 to approximate device screen on PC.
   add_definitions(-DSCREEN_WIDTH=600)
   add_definitions(-DSCREEN_HEIGHT=800)
-  LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sdk/lib/x86)
 endif(BUILD_FOR_ARM)
+
+IF(UNIX OR BUILD_FOR_ARM)
+    ADD_DEFINITIONS(-DSHARE_ROOT="/usr/share")
+ELSE (UNIX OR BUILD_FOR_ARM)
+    ADD_DEFINITIONS(-DSHARE_ROOT="")
+    ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
+ENDIF (UNIX OR BUILD_FOR_ARM)
 
 set(ONYX_LIBS onyx_sys onyx_ui onyx_wireless onyx_wpa onyx_screen onyx_data
   onyx_cms)
@@ -48,6 +53,7 @@ ADD_DEFINITIONS(-DCONFIG_CTRL_IFACE_UNIX)
 ENDIF (WIN32)
 
 add_subdirectory(src)
+add_subdirectory(sdk/code)
 set(feedreader_RCS feedreader.qrc)
 if(NOT BUILD_FOR_ARM)
 add_subdirectory(tests)
