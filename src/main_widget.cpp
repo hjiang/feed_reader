@@ -219,7 +219,7 @@ void MainWidget::displayArticle(shared_ptr<Article> article) {
 
 
 void MainWidget::keyPressEvent (QKeyEvent* e) {
-    if (e->key() == Qt::Key_Menu)
+    if (e->key() == Qt::Key_Escape)
         qApp->quit();
     return;
 }
