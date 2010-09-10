@@ -30,7 +30,8 @@ class MainWidget : public QWidget
     virtual ~MainWidget();
 
     void fitToScreen();
-
+    protected:
+        void keyPressEvent(QKeyEvent *e);
   private slots:
     void displayItemListForUrl(int id);
     void displayArticle(shared_ptr<Article> article);

@@ -218,5 +218,12 @@ void MainWidget::displayArticle(shared_ptr<Article> article) {
     article_page_->displayArticle(article);
 }
 
+
+void MainWidget::keyPressEvent (QKeyEvent* e) {
+    if (e->key() == Qt::Key_Menu)
+        qApp->quit();
+    return;
+}
+
 }  // namespace feed_reader
 }  // namespace onyx
