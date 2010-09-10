@@ -1,3 +1,6 @@
 [submodule "cmake_modules"]
 	path = cmake_modules
 	url = git://github.com/onyx-intl/cmake_modules.git
+[submodule "sdk"]
+	path = sdk
+	url = git://github.com/onyx-intl/booxsdk.git
